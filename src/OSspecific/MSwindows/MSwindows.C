@@ -377,7 +377,7 @@ bool setEnv
 }
 
 
-word hostName(bool full)
+string hostName(bool full)
 {
     const DWORD bufferSize = MAX_COMPUTERNAME_LENGTH + 1;
     TCHAR buffer[bufferSize];
@@ -385,31 +385,31 @@ word hostName(bool full)
 
     const bool success = 
       ::GetComputerName(buffer, &actualBufferSize);
-    const word computerName = success ? buffer : word::null;
+    const string computerName = success ? buffer : string::null;
     return computerName;
 }
 
 
-word domainName()
+string domainName()
 {
     // FIXME: this should be implemented for completion.
     // Could use ::gethostname and ::gethostbyname like POSIX.C, but would
     // then need to link against ws_32. Prefer to minimize dependencies.
 
-    return word::null;
+    return string::null;
 }
 
 
-word userName()
+string userName()
 {
-    word nameAsWord = getEnv("USERNAME");
+    string nameAsString = getEnv("USERNAME");
 
-    if (nameAsWord.empty()) 
+    if (nameAsString.empty()) 
     {
-        nameAsWord = MSwindows::getUserName();
+        nameAsString = MSwindows::getUserName();
     }
 
-    return nameAsWord;
+    return nameAsString;
 }
 
 
