@@ -1,0 +1,20 @@
+CPP        = cpp -traditional-cpp $(GFLAGS)
+LD         = $(WM_COMPILER_ARCH)-ld
+
+PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_LIBBIN)/$(FOAM_MPI) -lPstream
+PROJECT_INC  += -I$(WM_THIRD_PARTY_DIR)/zlib-1.2.5 \
+    -I$(WM_THIRD_PARTY_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)/mingw-libgnurx-2.5.1/include
+
+include $(GENERAL_RULES)/standard
+include $(GENERAL_RULES)/rc
+
+include $(RULES)/c
+include $(RULES)/c++
+
+SO      = dll
+EXE_EXT = .exe
+
+# Ensure we know what OS we are compiling for
+# during MakefileFiles and MakefileOptions
+GFLAGS  += -DWIN32 -DLITTLE_ENDIAN
+

@@ -114,6 +114,7 @@ int yyFlexLexer::yywrap()
 one_space                  [ \t\f]
 space                      {one_space}*
 some_space                 {one_space}+
+comma                      ","
 cspace                     ","{space}
 spaceNl                    ({space}|\n|\r)*
 
@@ -816,6 +817,10 @@ endOfSection               {space}")"{space}
 <unknownBlock,embeddedUnknownBlock>{spaceNl}{text} {
     }
 
+ /* ------              Ignore commas.                               ------  */
+
+<*>{comma} {
+    }
 
  /* ------ Ignore remaining space and \n s.  Any other characters are errors. */
 

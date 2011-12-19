@@ -1,0 +1,15 @@
+    include $(RULES)/mplib$(WM_MPLIB)
+    PROJECT_LIBS = $(FOAM_LIBBIN)/lib$(WM_PROJECT).o
+    EXE_LIBS = $(FOAM_LIBBIN)/libfiniteVolume.o \
+              $(FOAM_LIBBIN)/libOSspecific.o \
+              $(FOAM_LIBBIN)/libz.o \
+              $(FOAM_LIBBIN)/libtriSurface.o \
+              $(FOAM_LIBBIN)/liblagrangian.o \
+              $(FOAM_LIBBIN)/libmeshTools.o \
+              $(FOAM_LIBBIN)/libdecompositionMethods.o \
+              $(FOAM_LIBBIN)/libscotch.o \
+              $(FOAM_LIBBIN)/libmetis.o \
+              $(FOAM_LIBBIN)/libGKlib.o \
+              -lregex \
+              $(PLIBS) \
+              $(FOAM_LIBBIN)/$(FOAM_MPI)/libPstream.o

@@ -4,5 +4,6 @@ EXE_INC = \
     -I$(LIB_SRC)/transportModels
 
 LIB_LIBS = \
-    -lfiniteVolume
-
+    -lfiniteVolume \
+    -lincompressibleTransportModels \
+    -lmeshTools

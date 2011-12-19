@@ -1,0 +1,50 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     Allclean
+#
+# Description
+#     Try to do a proper clean up of the build folders and lnInclude folders.
+#
+#------------------------------------------------------------------------------
+
+cd ${0%/*} || exit 1    # run from this directory
+
+echo "Removing lnInclude folders..."
+find * | grep lnInclude$ | \
+while read file
+do
+  rm -rf $file
+done
+
+echo "Removing $WM_OPTIONS folders..."
+find * | grep $WM_OPTIONS$ | \
+while read file
+do
+  rm -rf $file
+done
+
+echo "Removing dependency files"
+find . -name "*.dep" | xargs rm

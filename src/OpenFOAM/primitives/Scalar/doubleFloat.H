@@ -31,6 +31,15 @@ License
 
 #include <cmath>
 
+#if defined( WIN32 ) || defined( WIN64 )
+#define j0f _j0
+#define j1f _j1
+#define jnf _jn
+#define y0f _y0
+#define y1f _y1
+#define ynf _yn
+#endif
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

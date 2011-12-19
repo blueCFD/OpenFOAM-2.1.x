@@ -139,7 +139,7 @@ extern "C"
 #    define LINUX
 #endif
 
-#if defined(LINUX) && defined(__GNUC__)
+#if defined(LINUX) && defined(__GNUC__) && (!defined(WIN32) && !defined(WIN64))
 #    define LINUX_GNUC
 #endif
 

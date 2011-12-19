@@ -19,4 +19,6 @@ EXE_LIBS = \
     -lcompressibleLESModels \
     -lfiniteVolume \
     -lgenericPatchFields \
-    -lmeshTools
+    -lmeshTools \
+    -lincompressibleTurbulenceModel \
+    -lcompressibleTurbulenceModel

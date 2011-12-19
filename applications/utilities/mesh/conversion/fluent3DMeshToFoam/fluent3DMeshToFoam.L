@@ -137,6 +137,7 @@ int yyFlexLexer::yywrap()
 one_space                  [ \t\f]
 space                      {one_space}*
 some_space                 {one_space}+
+comma                      ","
 cspace                     ","{space}
 
 alpha                      [_[:alpha:]]
@@ -739,6 +740,10 @@ endOfSection               {space}")"{space}
 <*>{some_space}|\r {
     }
 
+ /* ------              Ignore commas.                               ------  */
+
+<*>{comma} {
+    }
 
  /* ------              Any other characters are errors.              ------ */
 

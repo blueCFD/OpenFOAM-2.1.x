@@ -7,3 +7,5 @@
     {
         Foam::FatalError.exit();
     }
+
+#include "forceLoadLibraries.H"

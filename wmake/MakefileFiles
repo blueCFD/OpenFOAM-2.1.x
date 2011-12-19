@@ -32,7 +32,8 @@
 GENERAL_RULES = $(WM_DIR)/rules/General
 RULES         = $(WM_DIR)/rules/$(WM_ARCH)$(WM_COMPILER)
 WM_SCRIPTS    = $(WM_DIR)/scripts
-OBJECTS_DIR   = $(WM_OPTIONS)
+WM_OPTIONS_LOCAL  ?= $(WM_OPTIONS)
+OBJECTS_DIR   = $(WM_OPTIONS_LOCAL)
 FFLAGS        =
 
 include $(GENERAL_RULES)/general
@@ -43,12 +44,12 @@ include $(OBJECTS_DIR)/options
 # declare names of make system control files derived from file 'files'
 #------------------------------------------------------------------------------
 
-FILES   = $(WM_OPTIONS)/files
+FILES   = $(OBJECTS_DIR)/files
 
-SFILES  = $(WM_OPTIONS)/sourceFiles
-OFILES  = $(WM_OPTIONS)/objectFiles
-DFILES  = $(WM_OPTIONS)/dependencyFiles
-IFILES  = $(WM_OPTIONS)/includeDeps
+SFILES  = $(OBJECTS_DIR)/sourceFiles
+OFILES  = $(OBJECTS_DIR)/objectFiles
+DFILES  = $(OBJECTS_DIR)/dependencyFiles
+IFILES  = $(OBJECTS_DIR)/includeDeps
 
 #------------------------------------------------------------------------------
 # Declare dependecy of all make system files on FILES

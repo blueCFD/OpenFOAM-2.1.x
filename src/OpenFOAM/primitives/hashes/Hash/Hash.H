@@ -107,17 +107,23 @@ class Hash<void*>
 {
 public:
 
+#ifdef WIN64
+    typedef intptr_t HashType;
+#else
+    typedef long HashType;
+#endif
+
     Hash()
     {}
 
     unsigned operator()(const void* const& p, unsigned seed) const
     {
-        return Hash<long>()(long(p), seed);
+        return Hash<HashType>()(HashType(p), seed);
     }
 
     unsigned operator()(const void* const& p) const
     {
-        return Hash<long>()(long(p));
+        return Hash<HashType>()(HashType(p));
     }
 
 };

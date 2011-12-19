@@ -2,6 +2,7 @@
 
 # disabled
 
+# . $WM_PROJECT_DIR/wmake/scripts/AllwmakeArguments
 # if [ "$FV_HOME" -a -r $FV_HOME ]
 # then
 #    wmake fieldview9Reader

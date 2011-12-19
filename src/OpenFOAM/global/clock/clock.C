@@ -127,6 +127,14 @@ time_t Foam::clock::elapsedClockTime() const
     return newTime_ - startTime_;
 }
 
+#ifdef WIN64
+//add a compatible definition, since "long long == long int" in GCC+WIN64
+long int Foam::clock::elapsedClockTime()
+{
+    newTime_ = getTime();
+    return (long int) (newTime_ - startTime_);
+}
+#endif
 
 time_t Foam::clock::clockTimeIncrement() const
 {

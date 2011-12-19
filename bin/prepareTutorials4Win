@@ -1,0 +1,146 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+#
+#    This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+#    For more information about these patches, visit:
+#         http://www.bluecape.com.pt/blueCFD
+#
+#    OpenFOAM's official site: http://www.openfoam.com
+#
+#    OpenFOAM is free software: you can redistribute it and/or modify it
+#    under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#    for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     prepareTutorials4Win
+#
+# Description
+#     Help script for preparing tutorials for the Windows environment.
+#
+#------------------------------------------------------------------------------
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} /full/path/to/tutorial_folder /full/path/to/final_tar_ball
+
+  Help script for preparing tutorials for the Windows environment.
+  It will prepare the tutorials at "/full/path/to/tutorial_folder" and then pack the 
+  tutorials into "/full/path/to/final_tar_ball".tar.bz2
+  If "/full/path/to/final_tar_ball" is ommited, then the first argument will be
+  used as the base name for the target tarball.
+
+USAGE
+    exit 1
+}
+
+if [ $# -lt 1 -o "$1" = "--help" ]
+then
+    usage
+fi
+
+tutorialFolder=$1
+[ $# -eq 1 ] && finalTarBall=$1
+[ $# -eq 2 ] && finalTarBall=$2
+
+#prepare the folder for processing and copy the original tutorials
+#remove the build files, since their useless in Windows.
+mkdir -p "$tutorialFolder"
+cd "$tutorialFolder"
+cp -r $FOAM_TUTORIALS/. .
+for files2rm in `find . -name "*.dep"`; do
+  rm $files2rm
+done
+for folders2rm in `find . -type d -name "linux*" | grep "/Make/"`; do
+  rm -rf $folders2rm
+done
+
+if [ -d "$WM_PROJECT_USER_DIR/contribsExtend/viscoelasticSource" ]; then
+  #also copy the tutorials from viscoelasticSource
+  cp -r $WM_PROJECT_USER_DIR/contribsExtend/viscoelasticSource/tutorials/. .
+fi
+
+if [ -d "$WM_PROJECT_USER_DIR/contribsExtend/swak4foam" ]; then
+  #also copy the Examples from swak4foam
+  mkdir -p Examples/swak4foam
+  mkdir -p Examples/PyFoam
+  cp -r $WM_PROJECT_USER_DIR/contribsExtend/swak4foam/Examples/. Examples/swak4foam/.
+  cp -r $WM_PROJECT_USER_DIR/contribsExtend/PyFoam/examples/. Examples/PyFoam/.
+fi
+
+echo "Fixing chtMultiRegion* tutorials"
+for chtMultis in `find heatTransfer -name "chtMultiRegion*"`; do
+  for chtTuto in `find $chtMultis -maxdepth 1 -mindepth 1`; do
+    chtMultiRegionFixK $chtTuto
+  done
+done
+
+echo "Fixing PDRFoam* tutorials"
+for PDRFis in `find combustion -name "PDRFoam*"`; do
+  for PDRTuto in `find $PDRFis -maxdepth 1 -mindepth 1`; do
+    PDRFoamFixB $PDRTuto
+  done
+done
+
+echo "Fixing motorBike STL"
+cd incompressible/simpleFoam/motorBike
+chmod +x fixForWindows
+./fixForWindows
+cd -
+
+echo "Fixing multiphase/interFoam/les/nozzleFlow2D/Allrun (exponencial issue)"
+cd multiphase/interFoam/les/nozzleFlow2D
+echo '--- Allrun.orig 2010-12-13 20:30:39.164415186 +0000
++++ Allrun  2010-12-13 20:31:19.192043509 +0000
+@@ -13,6 +13,7 @@
+ 
+ runApplication blockMesh
+ 
++firstiter=1e-008
+ i=1
+ if [ -f log.cellSet ] ; then
+    i=3
+@@ -24,8 +30,8 @@
+     cp system/cellSetDict.${i} system/cellSetDict
+     runApplication cellSet
+     runRefineMesh
+-    cp -r 1e-08/polyMesh/* constant/polyMesh
+-    rm -rf 1e-08
++    cp -r ${firstiter}/polyMesh/* constant/polyMesh
++    rm -rf ${firstiter}
+     i=`expr $i + 1`
+ done
+ cp constant/polyMesh/boundary.org constant/polyMesh/boundary
+' | patch -p0
+cd -
+
+echo "Fixing combustion/XiFoam/ras/Allrun (rounding issue in SP mode)"
+cd combustion/XiFoam/ras
+sed -i -e 's=\.\./moriyoshiHomogeneous/0.005=\`find ../moriyoshiHomogeneous -name "0.*" | sort -u | tail -n 1\`=' Allrun
+cd -
+
+echo "Change all usages of 'sed -i' to sedIt"
+find . -name "Allrun*" | xargs grep 'sed -i' -sl | xargs sed -i -e 's=sed \-i=sedIt='
+
+
+#go back to the parent folder
+cd ..
+
+echo "Packing Tutorials to here: '${finalTarBall}.tar.bz2'"
+if [ -e "${finalTarBall}.tar.bz2" ]; then rm ${finalTarBall}.tar.bz2; fi
+cd ${tutorialFolder%/*}
+tar -cjhf ${finalTarBall}.tar.bz2 ${tutorialFolder##*/} --transform='s='${tutorialFolder##*/}'=tutorials='
+
+echo "Removing temporary folder."
+cd ..
+rm -rf ${tutorialFolder}

@@ -43,7 +43,8 @@ Foam::lagrangianWriter::lagrangianWriter
     binary_(binary),
     fName_(fName),
     cloudName_(cloudName),
-    os_(fName.c_str())
+    os_(fName.c_str(),
+        std::ios_base::out|std::ios_base::binary) //a must for Windows!
 {
     const fvMesh& mesh = vMesh_.mesh();
 

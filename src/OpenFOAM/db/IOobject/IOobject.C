@@ -26,10 +26,13 @@ License
 #include "IOobject.H"
 #include "Time.H"
 #include "IFstream.H"
+#include "StaticHashTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(Foam::IOobject, 0);
+
+static Foam::StaticHashTable<Foam::word> replacedFileNames_;
 
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
 
@@ -260,10 +263,30 @@ Foam::fileName Foam::IOobject::path
 }
 
 
+void Foam::IOobject::replaceFileName(const Foam::word & from, 
+                                     const Foam::word & to)
+{
+    replacedFileNames_.insert(from, to);
+}
+
+
+const Foam::word & Foam::IOobject::uniqueFileName() const
+{
+    StaticHashTable<word>::const_iterator findIt = 
+      replacedFileNames_.find(name());
+
+    const word & diskFileName = (findIt == replacedFileNames_.end()) ?
+      name() : *findIt;
+
+    return diskFileName;
+}
+
+
 Foam::fileName Foam::IOobject::filePath() const
 {
+    const word & diskFileName = uniqueFileName();
     fileName path = this->path();
-    fileName objectPath = path/name();
+    fileName objectPath = path/diskFileName;
 
     if (isFile(objectPath))
     {
@@ -282,7 +305,7 @@ Foam::fileName Foam::IOobject::filePath() const
         {
             fileName parentObjectPath =
                 rootPath()/caseName()
-               /".."/instance()/db_.dbDir()/local()/name();
+               /".."/instance()/db_.dbDir()/local()/diskFileName;
 
             if (isFile(parentObjectPath))
             {
@@ -299,7 +322,7 @@ Foam::fileName Foam::IOobject::filePath() const
                 fileName fName
                 (
                     rootPath()/caseName()
-                   /newInstancePath/db_.dbDir()/local()/name()
+                   /newInstancePath/db_.dbDir()/local()/diskFileName
                 );
 
                 if (isFile(fName))

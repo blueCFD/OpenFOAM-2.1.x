@@ -1,0 +1,25 @@
+#!/bin/sh
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} Folder_to_backup
+
+* Packs the whole folder in a .tar.bz2
+
+USAGE
+    exit 1
+}
+
+if [ $# -lt 1 -o "$1" = "--help" ]
+then
+    usage
+fi
+
+echo "Backup of $1 has started..."
+timeStamp=$(date +%Y-%m-%d)
+packDir=$1
+packFile=${packDir}.Full.mingw.${timeStamp}.tar.bz2
+tar -cjf $packFile $packDir --exclude="*/build/*"
+echo "Backup of $packDir to $packFile complete."

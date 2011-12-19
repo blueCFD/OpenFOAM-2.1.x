@@ -31,15 +31,6 @@ License
 namespace Foam
 {
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#if INT_MAX    != 2147483647
-#    error "INT_MAX    != 2147483647"
-#    error "The random number generator may not work!"
-#endif
-
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Random::Random(const label seed)
@@ -59,14 +50,7 @@ Random::Random(const label seed)
 
 int Random::bit()
 {
-    if (osRandomInteger() > INT_MAX/2)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+    return osRandomBit();
 }
 
 

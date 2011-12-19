@@ -85,6 +85,7 @@ unsetenv WM_PROJECT_USER_DIR
 unsetenv WM_PROJECT_VERSION
 unsetenv WM_SCHEDULER
 unsetenv WM_THIRD_PARTY_DIR
+unsetenv WM_CONTINUE_ON_ERROR
 
 
 #------------------------------------------------------------------------------

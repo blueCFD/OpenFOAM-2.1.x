@@ -51,7 +51,8 @@ Foam::PtrList<T>::PtrList(const PtrList<T>& a)
 {
     forAll(*this, i)
     {
-        ptrs_[i] = (a[i]).clone().ptr();
+        // static_cast work around for autoRefineDriver.C compiler error
+        ptrs_[i] = static_cast<T*>((a[i]).clone().ptr());
     }
 }
 

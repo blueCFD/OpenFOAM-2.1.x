@@ -1,5 +1,6 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # run from this directory
+. $WM_PROJECT_DIR/wmake/scripts/AllwmakeArguments
 
 [ -d "$WM_PROJECT_DIR" ] || {
     echo "Error: WM_PROJECT_DIR directory does not exist"
@@ -10,21 +11,41 @@ cd ${0%/*} || exit 1    # run from this directory
 
 set -x
 
-rm -rf latex man
-
-# remove html directory in background
-mv html html-stagedRemove$$ 2> /dev/null
-rm -rf html-stagedRemove$$ >/dev/null 2>&1 &
+for folder in html latex man qt_qch; do
+  # remove $folder directory in background
+  if [ -d "$folder" ]; then
+    mv $folder ${folder}-stagedRemove$$ 2> /dev/null
+    rm -rf ${folder}-stagedRemove$$ >/dev/null 2>&1 &
+  fi
+done
 
 # ensure that created files are readable by everyone
 umask 22
+if isMinGW; then
+mkdir html
+cp -r css html/
+cp *.png html/
+doxygen DoxyfileMinGWQt
+else
 doxygen
+fi
 
 # fix permissions (NB: '+X' and not '+x'!)
-chmod -R a+rX html latex man 2>/dev/null
+for folder in html latex man; do
+  [ -d "$folder" ] && chmod -R a+rX $folder 2>/dev/null
+done
 
 echo
 echo "Done doxygen"
+echo
+
+cp openfoam-code.qhcp qt_qch/
+cd qt_qch
+qcollectiongenerator openfoam-code.qhcp -o openfoam-code.qhc
+cd ..
+
+echo
+echo "Done Qt collection generation."
 echo
 
 # ----------------------------------------------------------------- end-of-file

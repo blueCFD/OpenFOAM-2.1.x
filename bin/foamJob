@@ -40,6 +40,7 @@ options:
   -case <dir>       specify alternative case directory, default is the cwd
   -parallel         parallel run of processors
   -screen           also sends output to screen
+  -wait             wait for execution to complete
   -version <ver>    specify an alternative OpenFOAM version
   -help             print the usage
 
@@ -82,11 +83,39 @@ findExec() {
      return 1
 }
 
+#find mpirun or mpiexec, by checking if MPI_ARCH_PATH matches the path for each
+findMpirun() {
+  path2mpirun=`findExec mpirun`
+  path2mpiexec=`findExec mpiexec`
+
+  if [ -n "$path2mpirun" -a "${path2mpirun%/*}" = "$MPI_ARCH_PATH/bin" ]; then
+    echo $path2mpirun
+    return 0
+  fi
+
+  if [ -n "$path2mpiexec" -a "${path2mpiexec%/*}" = "$MPI_ARCH_PATH/bin" ]; then
+    echo $path2mpiexec
+    return 0
+  fi
+
+  if [ -n "$path2mpirun" ]; then
+    echo $path2mpirun
+    return 0
+  fi
+
+  if [ -n "$path2mpiexec" ]; then
+    echo $path2mpiexec
+    return 0
+  fi
+
+  echo ""
+  return 1
+}
 
 
 # MAIN SCRIPT
 #~~~~~~~~~~~~
-unset parallelOpt screenOpt
+unset parallelOpt screenOpt waitOpt
 
 
 # parse options
@@ -109,6 +138,10 @@ do
       screenOpt=true
       shift
       ;;
+   -w | -wait)
+      waitOpt=true
+      shift
+      ;;
    -v | -version)
       [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
       version="$2"
@@ -128,11 +161,12 @@ do
 done
 
 [ "$#" -ge 1 ] || usage "No application specified"
+ORIGAPPLICATION=$1
 
 
 # use foamExec for a specified version
 # also need foamExec for remote (parallel) runs
-if [ -n "$version" -o "$parallelOpt" = true ]
+if [ -n "$version" -o "$parallelOpt" = true ] && ! isMinGW
 then
     # when possible, determine if application even exists
     if [ -z "$version" ]
@@ -158,7 +192,7 @@ else
 fi
 
 
-if [ "$parallelOpt" = true ]
+if [ "$parallelOpt" = true -a -z "$MPI_OVERRIDE_PARALLEL" ]
 then
     # parallel
     # ~~~~~~~~
@@ -186,7 +220,7 @@ then
     #
     # locate mpirun
     #
-    mpirun=`findExec mpirun` || usage "'mpirun' not found"
+    mpirun=`findMpirun` || usage "'mpirun' not found"
     mpiopts="-np $NPROCS"
 
     #
@@ -209,8 +243,39 @@ then
                 break
             fi
         done
+
+        #
+        # Send FOAM_SETTINGS to parallel processes. so the proper definitions are sent as well.
+        #
+        ! isMinGW && mpiopts="$mpiopts -x FOAM_SETTINGS"
+        ;;
+    MPICH | MSMPI)
+        # add hostfile info
+        for hostfile in \
+            hostfile \
+            machines \
+            system/hostfile \
+            system/machines \
+            ;
+        do
+           if [ -r $hostfile ]
+           then
+              mpiopts="$mpiopts -machinefile $hostfile"
+              break
+           fi
+        done
+
+        #
+        # Send FOAM_SETTINGS to parallel processes. so the proper definitions are sent as well.
+        #
+        ! isMinGW && mpiopts="$mpiopts -env FOAM_SETTINGS \"${FOAM_SETTINGS}\""
         ;;
     esac
+
+    #
+    # Add additional options that the user might need, such as disabling lo or eth0
+    #
+    mpiopts="$mpiopts $MPI_ACCESSORY_OPTIONS"
 
     #
     # run (in parallel)
@@ -222,8 +287,19 @@ then
     else
         echo "Executing: $mpirun $mpiopts $APPLICATION $@ -parallel > log 2>&1"
         $mpirun $mpiopts $APPLICATION $@ -parallel > log 2>&1 &
+        pid=$!
+        if [ "$waitOpt" = true ]; then wait $pid; fi
     fi
-
+elif [ "$parallelOpt" = true -a -n "$MPI_OVERRIDE_PARALLEL" ]
+then
+    #
+    # The override is used for corner case scenarios for when the conventional
+    # foamJob script isn't enough.
+    #
+    overrideOptions=""
+    [ "$screenOpt" = true ] && overrideOptions="$overrideOptions -s"
+    [ "$waitOpt" = true ] && overrideOptions="$overrideOptions -w"
+    $MPI_OVERRIDE_PARALLEL $overrideOptions $ORIGAPPLICATION $@
 else
     #
     # run (on single processor)
@@ -236,6 +312,8 @@ else
     else
         echo "Executing: $APPLICATION $@ > log 2>&1 &"
         $APPLICATION $@ > log 2>&1 &
+        pid=$!
+        if [ "$waitOpt" = true ]; then wait $pid; fi
     fi
 fi
 

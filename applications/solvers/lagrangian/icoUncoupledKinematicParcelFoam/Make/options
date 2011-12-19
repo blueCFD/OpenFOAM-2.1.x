@@ -23,6 +23,7 @@ EXE_LIBS = \
     -lincompressibleRASModels \
     -lincompressibleLESModels \
     -lincompressibleTransportModels \
+    -lincompressibleTurbulenceModel \
     -lfiniteVolume \
     -lmeshTools \
     -lregionModels \

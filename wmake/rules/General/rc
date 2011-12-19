@@ -1,0 +1,3 @@
+
+WINDRES_TOOL = `echo $(WM_CC) | sed s/gcc/windres/`
+rctoo = $(WINDRES_TOOL) $$SOURCE $@

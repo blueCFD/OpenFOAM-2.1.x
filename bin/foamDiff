@@ -1,0 +1,86 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 1991-2010 OpenCFD Ltd.
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamDiff
+#
+# Description
+#     Help script for running diff between OpenFOAM folders, without having 
+#   to clean up the binaries and objects. This was created because we at 
+#   blueCAPE haven't been using git for the development of these patches 
+#   for mingw.
+#
+#------------------------------------------------------------------------------
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} FolderNew FolderOrig patch_name
+
+* Compare folders "FolderNew" "FolderOrig" and output the diferences into the file "patch_name"
+* Folders ignored are the build folders
+
+USAGE
+    exit 1
+}
+
+if [ $# -lt 1 -o "$1" = "--help" ]
+then
+    usage
+fi
+
+FolderNew=$1
+FolderOrig=$2
+patch_name=$3
+
+if [ -e $patch_name ]; then
+  echo "The file $patch_name already exists."
+  echo "Running diff into an already existing file is no longer allowed."
+  echo "Please remove it or change the name!"
+  exit 1
+fi
+
+echo "Gathering file list to process..."
+
+find $FolderNew/* | grep -v "Make/linux" | grep -v "lnInclude" | \
+grep -v "gcc-4" | grep -v "/platform" | grep -v "/build/" | grep -v "/mingwcc" | \
+grep -v "/download" |grep -v "lib/linux" | grep -v "bin/linux" | grep -v ".dep" | \
+grep -v "/paraview-3\.8\.0/" | grep -v "/libccmio" | grep -v "\.directory" | \
+grep -v "/doc/Doxygen/html/" | grep -v "/doc/Doxygen/man/" | grep -v "/doc/Doxygen/qt_qch/" | \
+grep -v "/doc/Doxygen/latex/" | grep -v "/scotch_5.1/bin" | grep -v "/scotch_5.1/include" | \
+grep -v "/scotch_5.1/lib" | grep -v -e "/scotch_5.1/src/.*def$" | \
+grep -v "\.o$" | grep -v "\.a$" | grep -v "\.so$" | grep -v "\.dll$" | \
+grep -v "/scotch_5.1/src/Makefile.inc" | grep -v "/pexports-" | grep -v "parser" | \
+grep -v "/openmpi-" | grep -v "/zlib-" | grep -v "/mingw-libgnurx-" | \
+grep -v "/mingw-w64-crt" | grep -v "/mpfr-" | grep -v "/gmp-" | \
+grep -v "/gcc-" | grep -v "/binutils-" | \
+sed s=$FolderNew/== | \
+while read file
+do
+  if [ ! -d "$FolderNew/$file" ]; then
+    echo "Processing: " $FolderOrig/$file " -- vs -- " $FolderNew/$file 
+    diff -Nu $FolderOrig/$file $FolderNew/$file >> $patch_name
+  fi
+done

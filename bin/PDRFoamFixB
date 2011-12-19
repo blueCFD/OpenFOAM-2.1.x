@@ -1,0 +1,84 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+#
+#    This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+#    For more information about these patches, visit:
+#         http://www.bluecape.com.pt/blueCFD
+#
+#    OpenFOAM's official site: http://www.openfoam.com
+#
+#    OpenFOAM is free software: you can redistribute it and/or modify it
+#    under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#    for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#    PDRFoamFixB
+#
+# Description
+#    Help script for creating Windows ready PDRFoam tutorials. This has
+#   to be executed while in a case sensitive file system. Basically it replaces
+#   all relevant B field entries with B_.
+#
+#------------------------------------------------------------------------------
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} tutorial_folder
+
+  This is a help script for creating Windows ready PDRFoam tutorials. This has
+  to be executed while in a case sensitive file system. Basically it replaces
+  all relevant B field entries with B_.
+
+* This will change the pertinent tutorial irreversebly! Use it in a copy of the original!
+
+USAGE
+    exit 1
+}
+
+if [ $# -lt 1 -o "$1" = "--help" ]
+then
+    usage
+fi
+
+tutorialFolder=$1
+
+if [ ! -d "$tutorialFolder/0" -o ! -d "$tutorialFolder/system" -o ! -e "$tutorialFolder/0/B" ]; then
+  echo "Invalid tutorial folder! This script should only be used with tutorial cases that work with PDRFoam*."
+  exit 1
+fi
+
+#first copy with sed the 0/B file to 0/B_
+echo "Fixing 0/B..."
+sed -e 's=\(object\ *\)B=\1B_=g' "$tutorialFolder/0/B" > $tutorialFolder/0/B_
+rm $tutorialFolder/0/B
+
+#now sed every changeDict
+echo "Fixing system/*/changeDictionaryDict..."
+find $tutorialFolder/. -name changeDictionaryDict | \
+while read dict; do
+  sed -e 's=\(^\ *\)B$=\1B_=g' $dict > $dict.new
+  rm $dict
+  mv $dict.new $dict
+done
+
+#now sed every Allrun
+echo "Fixing Allrun..."
+find $tutorialFolder/. -name Allrun | \
+while read file; do
+  sed -e 's=,K,=,K_,=g' $file > $file.new
+  rm $file
+  mv $file.new $file
+done
+
+echo "Changes complete. You may now use this tutorial \"$tutorialFolder\" in Windows."

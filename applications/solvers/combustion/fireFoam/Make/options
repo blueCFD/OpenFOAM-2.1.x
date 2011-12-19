@@ -47,4 +47,6 @@ EXE_LIBS = \
     -lsurfaceFilmModels \
     -lpyrolysisModels \
     -llagrangianIntermediate \
+    -lcompressibleTurbulenceModel \
+    -llagrangian \
     -lODE

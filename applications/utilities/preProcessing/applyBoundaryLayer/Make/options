@@ -11,4 +11,5 @@ EXE_LIBS = \
     -lincompressibleRASModels \
     -lincompressibleTransportModels \
     -lgenericPatchFields \
+    -lincompressibleTurbulenceModel \
     -lmeshTools

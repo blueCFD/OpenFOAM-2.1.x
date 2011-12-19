@@ -48,7 +48,10 @@ Foam::IFstreamAllocator::IFstreamAllocator(const fileName& pathname)
         }
     }
 
-    ifPtr_ = new ifstream(pathname.c_str());
+    // Use binary mode in case we read binary.
+    // Causes windows reading to fail if we don't.
+    ifPtr_ = new ifstream(pathname.c_str(), 
+                          ios_base::in|ios_base::binary);
 
     // If the file is compressed, decompress it before reading.
     if (!ifPtr_->good() && isFile(pathname + ".gz", false))

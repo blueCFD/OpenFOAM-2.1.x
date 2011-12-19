@@ -31,16 +31,55 @@
 #
 #------------------------------------------------------------------------------
 
-[ -d "$WM_OPTIONS" ] || {
-    echo "The '$WM_OPTIONS' directory does not exist, exiting" 1>&2
+[ -z "$WM_OPTIONS_LOCAL" ] && WM_OPTIONS_LOCAL=$WM_OPTIONS
+
+[ -d "$WM_OPTIONS_LOCAL" ] || {
+    echo "The '$WM_OPTIONS_LOCAL' directory does not exist, exiting" 1>&2
     exit 1
 }
 
 # change to the $WM_OPTIONS directory
-cd "$WM_OPTIONS" 2>/dev/null || {
-    echo "Could not change to directory '$WM_OPTIONS'" 1>&2
+cd "$WM_OPTIONS_LOCAL" 2>/dev/null || {
+    echo "Could not change to directory '$WM_OPTIONS_LOCAL'" 1>&2
     exit 1
 }
+
+# special preparations for MinGW builds
+TIS_MinGW=0
+if isMinGW && [ "$makeOption" != "libo" -a "$makeOption" != "lib" ]; then
+    if [ -e "$FOAM_SRC/OSspecific/$WM_OSTYPE/res/OFversion_template.rc" ]; then
+        TIS_MinGW=1
+        cp "$FOAM_SRC/OSspecific/$WM_OSTYPE/res/OFversion_template.rc" tmpver.rc
+    fi
+fi
+
+if [ $TIS_MinGW -eq 1 ]; then
+    #Extract the binary name
+    MGW_EXENAME=`grep -e "^EXE =" files`
+    MGW_LIBNAME=`grep -e "^LIB =" files`
+    MGW_FINALNAME="NONAME"
+
+    if [ -n "$MGW_EXENAME" ]; then
+        MGW_FINALNAME=`echo $MGW_EXENAME | sed -e 's=.*/=='`.exe
+    fi
+
+    if [ -n "$MGW_LIBNAME" ]; then
+        MGW_FINALNAME=`echo $MGW_LIBNAME | sed -e 's=.*/=='`.dll
+    fi
+
+    #get current OpenFOAM version
+    MGW_OFversion=`wmakePrintBuild -update`
+
+    #apply values to template
+    sed -e 's=2\.0\.\0\.0='$MGW_OFversion'=g' \
+        -e 's=tmpintname='$MGW_FINALNAME'=' \
+        -e 's=tmporigname='$MGW_FINALNAME'=' \
+        tmpver.rc > version_of_build.rc
+
+    #clean up
+    unset MGW_OFversion MGW_EXENAME MGW_LIBNAME MGW_FINALNAME
+    rm tmpver.rc
+fi
 
 # Find and keep macro definitions in files list
 grep "=" files > filesMacros
@@ -51,6 +90,11 @@ grep -v "=" files > filesPlusBlank
 # Add a newline to files to ensure the last line is followed by a newline
 echo "" >> filesPlusBlank
 
+# Plug in the version resource file for being compiled along
+if [ $TIS_MinGW -eq 1 ]; then
+    echo "Make/$WM_OPTIONS_LOCAL/version_of_build.rc" >> filesPlusBlank
+    echo "" >> filesPlusBlank
+fi
 
 # Remove commented lines, blank lines, and trailing blanks from files
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

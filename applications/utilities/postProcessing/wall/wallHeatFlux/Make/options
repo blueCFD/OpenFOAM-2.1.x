@@ -12,4 +12,5 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lgenericPatchFields \
     -lspecie \
-    -lbasicThermophysicalModels
+    -lbasicThermophysicalModels \
+    -lcompressibleTurbulenceModel

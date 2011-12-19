@@ -1,6 +1,6 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # run from this directory
-makeType=${1:-libso}
+allwmakeOptions='-allow-lib makeType' && . $WM_PROJECT_DIR/wmake/scripts/AllwmakeArguments
 
 wmakeCheckPwd "$WM_PROJECT_DIR/src" || {
     echo "Error: Current directory is not \$WM_PROJECT_DIR/src"
@@ -22,10 +22,31 @@ wmakePrintBuild -check || /bin/rm -f OpenFOAM/Make/*/global.? 2>/dev/null
 
 wmakeLnInclude OpenFOAM
 wmakeLnInclude OSspecific/${WM_OSTYPE:-POSIX}
-Pstream/Allwmake $*
+wmakeVersionTag #generate version tag, after OpenFOAM/lnInclude has been created
+
+Pstream/Allwmake $OriginalOptions
 
 OSspecific/${WM_OSTYPE:-POSIX}/Allwmake
 wmake $makeType OpenFOAM
+
+#in case direct linking isn't to be used, then setup settings for using Pstream library
+if isMinGW; then
+  export WM_PSTREAMLINK="LINKTOPSTREAM"
+
+  #build all Pstream libraries
+  (cd Pstream && ./Allwmake)
+
+  rm -f $FOAM_LIBBIN/libOpenFOAM.*
+
+  wmake $makeType OpenFOAM
+
+  unset WM_PSTREAMLINK
+
+  # mingw excludes default compiler path so copy
+  # missing /usr/include/FlexLexer.h for flex
+  cp /usr/include/FlexLexer.h "$FOAM_SRC/OpenFOAM/lnInclude/"
+fi
+
 
 wmake $makeType fileFormats
 wmake $makeType triSurface
@@ -33,18 +54,25 @@ wmake $makeType meshTools
 wmake $makeType edgeMesh
 wmake $makeType surfMesh
 
+# lagrangian is needed by finiteVolume
+wmake $makeType lagrangian/basic
+
+# finiteVolume is needed by the Decomposition methods
+wmake $makeType finiteVolume
+
 # Decomposition methods needed by dummyThirdParty
 parallel/decompose/AllwmakeLnInclude
+if isMinGW; then
+  wmake $makeType parallel/decompose/decompositionMethods
+fi
 # dummyThirdParty (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools
-dummyThirdParty/Allwmake $*
+dummyThirdParty/Allwmake $OriginalOptions
 
-wmake $makeType finiteVolume
-wmake $makeType lagrangian/basic
 wmake $makeType lagrangian/distributionModels
 wmake $makeType genericPatchFields
 
 # Build the proper scotchDecomp, metisDecomp etc.
-parallel/Allwmake $*
+parallel/Allwmake $OriginalOptions
 
 wmake $makeType conversion
 
@@ -57,16 +85,23 @@ wmake $makeType topoChangerFvMesh
 wmake $makeType ODE
 wmake $makeType randomProcesses
 
-thermophysicalModels/Allwmake $*
-transportModels/Allwmake $*
-turbulenceModels/Allwmake $*
-wmake $makeType combustionModels
-regionModels/Allwmake $*
-lagrangian/Allwmake $*
-postProcessing/Allwmake $*
-mesh/Allwmake $*
+thermophysicalModels/Allwmake $OriginalOptions
+transportModels/Allwmake $OriginalOptions
+turbulenceModels/Allwmake $OriginalOptions
 
-fvAgglomerationMethods/Allwmake $*
+# Depends on RAS/turbulenceModels/compressible
+# hence not in thermophysicalModels
+wmake $makeType thermophysicalModels/chemistryModel
+wmake $makeType thermophysicalModels/solidChemistryModel
+regionModels/Allwmake $OriginalOptions
+
+wmake $makeType combustionModels
+
+lagrangian/Allwmake $OriginalOptions
+postProcessing/Allwmake $OriginalOptions
+mesh/Allwmake $OriginalOptions
+
+fvAgglomerationMethods/Allwmake $OriginalOptions
 
 wmake $makeType fvMotionSolver
 wmake $makeType engine

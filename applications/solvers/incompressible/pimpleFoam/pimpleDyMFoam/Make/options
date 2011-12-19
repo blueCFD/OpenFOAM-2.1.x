@@ -13,6 +13,7 @@ EXE_LIBS = \
     -ltopoChangerFvMesh \
     -ldynamicMesh \
     -lmeshTools \
+    -lincompressibleTurbulenceModel \
     -lincompressibleTransportModels \
     -lincompressibleRASModels \
     -lincompressibleLESModels \

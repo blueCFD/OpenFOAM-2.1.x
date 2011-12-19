@@ -1,0 +1,144 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# License
+#    This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
+#    For more information about these patches, visit:
+#         http://www.bluecape.com.pt/blueCFD
+#
+#    OpenFOAM's official site: http://www.openfoam.com
+#
+#    OpenFOAM is free software: you can redistribute it and/or modify it
+#    under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#    for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     multiBuilder
+#
+# Description
+#     Help script for building multiple WM_OPTIONS builds sequentially. 
+#   Initially created for building mingw-w32 DP+SP + mingw-w64, including 
+#   tutorials that need cross-compiling for their applications.
+#
+#------------------------------------------------------------------------------
+
+#---------- Functions -------------
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/}
+
+This will run as a scripted multi-builder of WM_OPTIONS based on each
+prefs-*.sh version given or additional variables. NOTE: you cannot have the
+OpenFOAM environment activated prior to executing this script!!
+
+USAGE
+    exit 1
+}
+
+#argument: bashrc file name
+buildIt()
+{
+  #make sure our logging folder is up and running
+  if [ ! -d "../buildLogs" ]; then
+    mkdir -p ../buildLogs
+  fi
+
+  (
+    . etc/bashrc $*
+
+    timeStamp=$(date +%Y-%m-%d_%H-%M)
+    logFile="../buildLogs/Allwmake_${WM_OPTIONS}_${timeStamp}.log"
+
+    echo "Building $WM_OPTIONS with $WM_MPLIB ..."
+    time ./Allwmake -j > $logFile 2>&1 && \
+    time tutorials/Allwmake -j >> $logFile 2>&1 || \
+    echo "There seems to have been problems with this build. Check the log: $logFile"
+
+    if isMinGW; then
+      fixPatchExeNames >> $logFile 2>&1
+    fi
+
+    if [ -e "$WM_PROJECT_USER_DIR/contribsExtend" ]; then
+      time wmake all $WM_PROJECT_USER_DIR/contribsExtend >> $logFile 2>&1
+    fi
+
+  )
+}
+
+#---------- script ----------------
+
+if [ "x$1" = "x--sourceonly" ]
+then
+    : #do nothing...
+elif [ "x$1" = "x--help" -o $# -gt 0 -o "x$WM_PROJECT_DIR" != "x" ]
+then
+    usage
+fi
+
+if [ "x$1" != "x--sourceonly" ]
+then
+
+  #build with Open-MPI ------------------------------------------------
+  # buildIt prefs-mingw32.sh
+
+  buildIt prefs-mingw-w32.sh
+  buildIt prefs-mingw-w32.sh WM_PRECISION_OPTION=SP
+  buildIt prefs-mingw-w64.sh
+
+  # buildIt prefs-i586-mingw32msvc.sh
+  # buildIt prefs-i586-mingw32msvc.sh WM_PRECISION_OPTION=SP
+  # buildIt prefs-amd64-mingw32msvc.sh
+
+  # buildIt prefs-i686-w64-mingw32.sh
+  # buildIt prefs-i686-w64-mingw32.sh  WM_PRECISION_OPTION=SP
+  # buildIt prefs-x86_64-w64-mingw32.sh
+
+
+  #build with MPICH2 ------------------------------------------------
+  # buildIt prefs-mingw32.sh WM_MPLIB=MPICH
+
+  buildIt prefs-mingw-w32.sh WM_MPLIB=MPICH
+  buildIt prefs-mingw-w32.sh WM_MPLIB=MPICH WM_PRECISION_OPTION=SP
+  buildIt prefs-mingw-w64.sh WM_MPLIB=MPICH
+
+  # buildIt prefs-i586-mingw32msvc.sh WM_MPLIB=MPICH
+  # buildIt prefs-i586-mingw32msvc.sh WM_MPLIB=MPICH WM_PRECISION_OPTION=SP
+  # buildIt prefs-amd64-mingw32msvc.sh WM_MPLIB=MPICH
+
+  # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MPICH
+  # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MPICH WM_PRECISION_OPTION=SP
+  # buildIt prefs-x86_64-w64-mingw32.sh WM_MPLIB=MPICH
+
+
+  #build with MSMPI ------------------------------------------------
+  # buildIt prefs-mingw32.sh WM_MPLIB=MSMPI
+
+  buildIt prefs-mingw-w32.sh WM_MPLIB=MSMPI
+  buildIt prefs-mingw-w32.sh WM_MPLIB=MSMPI WM_PRECISION_OPTION=SP
+  buildIt prefs-mingw-w64.sh WM_MPLIB=MSMPI
+
+  # buildIt prefs-i586-mingw32msvc.sh WM_MPLIB=MSMPI
+  # buildIt prefs-i586-mingw32msvc.sh WM_MPLIB=MSMPI WM_PRECISION_OPTION=SP
+  # buildIt prefs-amd64-mingw32msvc.sh WM_MPLIB=MSMPI
+
+  # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MSMPI
+  # buildIt prefs-i686-w64-mingw32.sh WM_MPLIB=MSMPI WM_PRECISION_OPTION=SP
+  # buildIt prefs-x86_64-w64-mingw32.sh WM_MPLIB=MSMPI
+
+
+  #Linux builds ----------------------------------------------------
+  # buildIt WM_ARCH_OPTION=32
+  # buildIt WM_ARCH_OPTION=32 WM_PRECISION_OPTION=SP
+  # buildIt
+
+fi

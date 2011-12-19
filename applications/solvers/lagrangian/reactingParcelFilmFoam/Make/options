@@ -41,4 +41,6 @@ EXE_LIBS = \
     -lsurfaceFilmModels \
     -llagrangianIntermediate \
     -lODE \
+    -lcompressibleTurbulenceModel \
+    -llagrangian \
     -lcombustionModels

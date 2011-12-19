@@ -320,7 +320,7 @@ void Foam::argList::getRootCase()
 
     if (iter != options_.end())
     {
-        casePath = iter();
+        casePath = toUnixPath(iter());
         casePath.clean();
 
         if (casePath.empty() || casePath == ".")

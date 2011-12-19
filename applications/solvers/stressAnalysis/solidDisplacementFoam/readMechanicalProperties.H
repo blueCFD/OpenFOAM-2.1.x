@@ -75,6 +75,9 @@
 
     autoPtr<volScalarField> EPtr;
 
+#ifdef EIO
+#undef EIO
+#endif
     IOobject EIO
     (
         "E",

@@ -126,6 +126,7 @@ extern "C"
 #include "ptscotch.h"
 }
 
+#include "longLong.H"
 
 // Hack: scotch generates floating point errors so need to switch of error
 //       trapping!
@@ -133,7 +134,7 @@ extern "C"
 #    define LINUX
 #endif
 
-#if defined(LINUX) && defined(__GNUC__)
+#if defined(LINUX) && defined(__GNUC__) && (!defined(WIN32) && !defined(WIN64))
 #    define LINUX_GNUC
 #endif
 
@@ -556,10 +557,10 @@ if (debug)
     {
         Pout<< "SCOTCH_dgraphBuild with:" << nl
             << "xadj.size()-1   : " << xadj.size()-1 << nl
-            << "xadj            : " << long(xadj.begin()) << nl
-            << "velotab         : " << long(velotab.begin()) << nl
+            << "xadj            : " << reinterpret_cast<long long>(xadj.begin()) << nl
+            << "velotab         : " << reinterpret_cast<long long>(velotab.begin()) << nl
             << "adjncy.size()   : " << adjncy.size() << nl
-            << "adjncy          : " << long(adjncy.begin()) << nl
+            << "adjncy          : " << reinterpret_cast<long long>(adjncy.begin()) << nl
             << endl;
     }
 

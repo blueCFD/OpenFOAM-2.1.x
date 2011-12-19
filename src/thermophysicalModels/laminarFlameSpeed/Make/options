@@ -5,4 +5,7 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude
 
 LIB_LIBS = \
-    -lfiniteVolume
+    -lfiniteVolume \
+    -lspecie \
+    -lbasicThermophysicalModels \
+    -lreactionThermophysicalModels

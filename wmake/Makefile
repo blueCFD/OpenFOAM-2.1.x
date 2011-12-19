@@ -57,7 +57,8 @@ WM_SCRIPTS   = $(WM_DIR)/scripts
 
 LIB_SRC            = $(WM_PROJECT_DIR)/src
 LIB_PLATFORMS      = $(WM_PROJECT_DIR)/platforms/$(WM_OPTIONS)/lib
-OBJECTS_DIR        = $(MAKE_DIR)/$(WM_OPTIONS)
+WM_OPTIONS_LOCAL  ?= $(WM_OPTIONS)
+OBJECTS_DIR        = $(MAKE_DIR)/$(WM_OPTIONS_LOCAL)
 CLASSES_DIR        = $(MAKE_DIR)/classes
 
 SYS_INC            =
@@ -92,6 +93,9 @@ LIB             = libNULL
 
 # Shared library extension
 SO              = so
+
+# Executable extension
+EXE_EXT         =
 
 # Project executable
 EXE             = $(WM_PROJECT).out
@@ -145,18 +149,22 @@ LIB_HEADER_DIRS = \
 # define link statements for executables
 #------------------------------------------------------------------------------
 
-$(EXE):  $(OBJECTS)
-	     @$(WM_SCRIPTS)/makeTargetDir $(EXE)
+EXECUTABLE  = $(EXE)$(EXE_EXT)
+SEXECUTABLE = $(SEXE)$(EXE_EXT)
+
+$(EXECUTABLE):  $(OBJECTS)
+	     @$(WM_SCRIPTS)/makeTargetDir $(EXECUTABLE)
 	     $(LINKEXE) $(OBJECTS) -L$(LIB_PLATFORMS) \
-	     $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(EXE)
+	     $(EXE_LIBS) $(PROJECT_LIBS) $(SYS_LIBS) $(LINK_LIBS) \
+	     $(GLIBS) -o $(EXECUTABLE)
 
-exe:     $(SEXE)
-	     @echo \'$(SEXE)\' is up to date.
+exe:     $(SEXECUTABLE)
+	     @echo \`$(SEXECUTABLE)\' is up to date.
 
-$(SEXE): $(OBJECTS)
-	     @$(WM_SCRIPTS)/makeTargetDir $(SEXE)
+$(SEXECUTABLE): $(OBJECTS)
+	     @$(WM_SCRIPTS)/makeTargetDir $(SEXECUTABLE)
 	     $(LINKEXE) $(OBJECTS) $(EXE_LIBS) \
-         $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(SEXE)
+	     $(SYS_LIBS) $(LINK_LIBS) $(GLIBS) -o $(SEXECUTABLE)
 
 
 #------------------------------------------------------------------------------
@@ -171,8 +179,11 @@ libso:   $(LIB).$(SO)
 $(LIB).$(SO): $(OBJECTS)
 	     @$(WM_SCRIPTS)/makeTargetDir $(LIB)
 	     @rm -f so_locations
+	     @echo $(LINKLIBSO) $(LOCAL_OBJECTS) -L$(LIB_PLATFORMS) \
+	     $(PROJECT_LIBS) $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
 	     @cd $(OBJECTS_DIR) ; \
-	     $(LINKLIBSO) $(LOCAL_OBJECTS) -L$(LIB_PLATFORMS) $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
+	     $(LINKLIBSO) $(LOCAL_OBJECTS) -L$(LIB_PLATFORMS) \
+	     $(PROJECT_LIBS) $(LIB_LIBS) $(GLIB_LIBS) -o $(LIB).$(SO)
 
 lib:     $(LIB).a
 	     @echo \'$(LIB).a\' is up to date.

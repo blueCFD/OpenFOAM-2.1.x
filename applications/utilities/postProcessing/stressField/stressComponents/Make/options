@@ -7,4 +7,5 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lgenericPatchFields \
     -lincompressibleRASModels \
-    -lincompressibleTransportModels
+    -lincompressibleTransportModels \
+    -lincompressibleTurbulenceModel

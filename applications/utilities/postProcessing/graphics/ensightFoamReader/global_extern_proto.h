@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 
-#ifdef WIN32
+#if defined( WIN32 ) || defined( WIN64 )
 #define W32IMPORT __declspec( dllimport )
 #define W32EXPORT __declspec( dllexport )
 #else

@@ -1,5 +1,6 @@
 #!/bin/sh
 cd ${0%/*} || exit 1    # run from this directory
+allwmakeOptions='-allow-doc doDoxygen' && . $WM_PROJECT_DIR/wmake/scripts/AllwmakeArguments
 
 wmakeCheckPwd "$WM_PROJECT_DIR" || {
     echo "Error: Current directory is not \$WM_PROJECT_DIR"
@@ -15,7 +16,30 @@ wmakeCheckPwd "$WM_PROJECT_DIR" || {
 }
 
 # wmake is required for subsequent targets
-( cd wmake/src && make )
+if ! isMinGW; then
+
+  ( cd wmake/src && make )
+
+else
+
+  if [ -d "wmake/bin/$WM_ARCH$WM_COMPILER" ]; then
+    filecount=`ls -1A "wmake/bin/$WM_ARCH$WM_COMPILER" | wc -l`
+  fi
+
+  if [ "$filecount" = "0" -o ! -d "wmake/platforms/$WM_ARCH$WM_COMPILER" ]; then
+    ( cd wmake/src && make WMAKE_BIN="${WM_DIR}/platforms/${WM_ARCH}${WM_COMPILER}_win" EXE_EXTENSION=".exe" )
+    ( cd wmake/src && make cc="gcc" CC="g++" )
+  fi
+  filecount=`ls -1A "wmake/platforms/$WM_ARCH$WM_COMPILER" | wc -l`
+
+  #use the wmake compiled for linux usage, if not built with system's gcc
+  if [ "$filecount" = "0" -o ! -d "wmake/platforms/$WM_ARCH$WM_COMPILER" ]; then
+    echo "Aborting Allwmake, because a working wmake wasn't found nor built."
+    exit 1
+  fi
+  unset filecount
+
+fi
 
 # build ThirdParty sources
 if [ -d "$WM_THIRD_PARTY_DIR" ]
@@ -29,7 +53,7 @@ fi
 src/Allwmake
 applications/Allwmake
 
-if [ "$1" = doc ]
+if [ $doDoxygen -gt 0 ]
 then
     doc/Allwmake
 fi

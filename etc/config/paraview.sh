@@ -36,6 +36,37 @@
 # clean the PATH
 cleaned=`$WM_PROJECT_DIR/bin/foamCleanPath "$PATH" "$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/cmake- $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-"` && PATH="$cleaned"
 
+# prefix to system, i.e. append to OpenFOAM's PATH
+_foamAppendPath()
+{
+    systempath=`echo $PATH | sed -e 's=.*OpenFOAM==' -e 's=:=,,,=' -e 's=.*,,,=='`
+    ofpath=`echo $PATH | sed -e 's=:*'$systempath'=='`
+    while [ $# -ge 1 ]
+    do
+        ofpath=$ofpath:$1
+        shift
+    done
+
+    export PATH=$ofpath:$systempath
+    unset ofpath systempath
+}
+
+# prefix to system, i.e. append to OpenFOAM's LD_LIBRARY_PATH
+_foamAppendLib()
+{
+    systempath=`echo $LD_LIBRARY_PATH | sed -e 's=.*OpenFOAM==' -e 's=:=,,,=' -e 's=.*,,,=='`
+    ofpath=`echo $LD_LIBRARY_PATH | sed -e 's=:*'$systempath'=='`
+    while [ $# -ge 1 ]
+    do
+        ofpath=$ofpath:$1
+        shift
+    done
+
+    export LD_LIBRARY_PATH=$ofpath:$systempath
+    unset ofpath systempath
+}
+
+
 # determine the cmake to be used
 unset CMAKE_HOME
 for cmake in cmake-2.8.4 cmake-2.8.3 cmake-2.8.1
@@ -44,7 +75,7 @@ do
     if [ -r $cmake ]
     then
         export CMAKE_HOME=$cmake
-        export PATH=$CMAKE_HOME/bin:$PATH
+        _foamAppendPath $CMAKE_HOME/bin
         break
     fi
 done
@@ -94,8 +125,8 @@ export ParaView_DIR=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-
 # set paths if binaries or source are present
 if [ -r $ParaView_DIR -o -r $paraviewInstDir ]
 then
-    export PATH=$ParaView_DIR/bin:$PATH
-    export LD_LIBRARY_PATH=$ParaView_DIR/lib/paraview-$ParaView_MAJOR:$LD_LIBRARY_PATH
+    _foamAppendPath $ParaView_DIR/bin
+    _foamAppendLib $ParaView_DIR/lib/paraview-$ParaView_MAJOR
     export PV_PLUGIN_PATH=$FOAM_LIBBIN/paraview-$ParaView_MAJOR
 
     # add in python libraries if required

@@ -10,4 +10,6 @@ EXE_LIBS = \
     -lspecie \
     -lcompressibleRASModels \
     -lfiniteVolume \
-    -lgenericPatchFields
+    -lgenericPatchFields \
+    -lcompressibleTurbulenceModel \
+    -lincompressibleTurbulenceModel

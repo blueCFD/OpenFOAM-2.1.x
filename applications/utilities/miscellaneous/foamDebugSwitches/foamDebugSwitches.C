@@ -55,6 +55,8 @@ int main(int argc, char *argv[])
 
     argList args(argc, argv);
 
+#   include "forceLoadLibraries.H"
+
     wordList currDebug(debug::debugSwitches().toc());
     wordList currInfo(debug::infoSwitches().toc());
     wordList currOpt(debug::optimisationSwitches().toc());

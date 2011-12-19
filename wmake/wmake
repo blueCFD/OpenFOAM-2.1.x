@@ -166,6 +166,11 @@ then
     fi
 fi
 
+if isMinGW; then
+  if [ "$WM_COMPILE_OPTION" = "Prof" -a "$makeOption" = "libso" ]; then
+    makeOption="libo"
+  fi
+fi
 
 #------------------------------------------------------------------------------
 # Recurse the application directories tree
@@ -182,7 +187,7 @@ then
         # FOAM_APPS=$(find . -maxdepth 1 \( -type d -a ! -name "." -a ! -name Optional -a ! -name Make \)  -printf "%f ")
         # avoid 'find' with '-printf' ... not entirely portable
         FOAM_APPS=$(for d in *; do [ -d "$d" -a "$d" != Optional -a "$d" != Make ] && echo "$d"; done | xargs)
-        $make -k -f $WM_DIR/MakefileApps FOAM_APPS="$FOAM_APPS"
+        $make ${WM_CONTINUE_ON_ERROR:+-k} -f $WM_DIR/MakefileApps FOAM_APPS="$FOAM_APPS"
         exit $?
     fi
 fi
@@ -229,7 +234,8 @@ fi
 # was created successfully
 #------------------------------------------------------------------------------
 
-OBJECTS_DIR=$MakeDir/$WM_OPTIONS
+[ -z "$WM_OPTIONS_LOCAL" ] && WM_OPTIONS_LOCAL=$WM_OPTIONS
+OBJECTS_DIR=$MakeDir/$WM_OPTIONS_LOCAL
 
 [ -r $OBJECTS_DIR/objectFiles ] || {
     echo "$Script error: file '$OBJECTS_DIR/objectFiles' could not be created in $PWD" 1>&2

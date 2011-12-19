@@ -1,0 +1,28 @@
+#!/bin/sh
+
+usage() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat<<USAGE
+
+usage: ${0##*/} Folder_to_backup
+
+* Packs the whole folder in a .tar.lzma, excluding the binaries, objects and downloaded packages.
+
+USAGE
+    exit 1
+}
+
+if [ $# -lt 1 -o "$1" = "--help" ]
+then
+    usage
+fi
+
+echo "Backup of $1 has started..."
+timeStamp=$(date +%Y-%m-%d)
+packDir=$1
+packFile=${packDir}.Source.mingw.${timeStamp}.tar.lzma
+tar -lzma -cf $packFile $packDir --exclude="*bin/linux*" --exclude="*lib/linux*" --exclude="*.dep" \
+--exclude="*lnInclude*" --exclude="*Make/linux*" --exclude="*mingwcc*" --exclude="*platforms*" \
+--exclude="*/build/*" --exclude="*libccmio-2.6.1/*" --exclude="*download*" --exclude="*doc/Doxygen/html/*" \
+--exclude="*doc/Doxygen/qt_qch*" --exclude="*mingw-libgnurx-2.5.1*" --exclude="*zlib-1.2.5*"
+echo "Backup of $packDir to $packFile complete."

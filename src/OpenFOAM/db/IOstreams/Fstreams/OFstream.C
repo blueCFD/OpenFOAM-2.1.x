@@ -69,7 +69,10 @@ Foam::OFstreamAllocator::OFstreamAllocator
             rm(pathname + ".gz");
         }
 
-        ofPtr_ = new ofstream(pathname.c_str());
+        // Use binary mode in case we write binary.
+        // Causes windows reading to fail if we don't
+        ofPtr_ = new ofstream(pathname.c_str(), 
+                              ios_base::out|ios_base::binary);
     }
 }
 

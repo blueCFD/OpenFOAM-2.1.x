@@ -11,7 +11,22 @@ EXE_INC = \
 EXE_LIBS = \
     -lfiniteVolume \
     -ldecompositionMethods \
-    -L$(FOAM_LIBBIN)/dummy -lptscotchDecomp \
     -lmeshTools \
     -ldynamicMesh \
     -lautoMesh
+
+#if (defined( WIN32 ) || defined( WIN64 ))
+
+EXE_LIBS += \
+    -lptscotchDecomp
+
+/*no longer supported.*/
+/*    -lmetisDecomp \ */
+/*    -lparMetisDecomp */
+
+#else
+
+EXE_LIBS += \
+    -L$(FOAM_LIBBIN)/dummy -lptscotchDecomp
+
+#endif

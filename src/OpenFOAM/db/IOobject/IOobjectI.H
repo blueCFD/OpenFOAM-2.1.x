@@ -75,6 +75,12 @@ inline Stream& Foam::IOobject::writeBanner(Stream& os, bool noHint)
         "                                                 |\n"
         "\\*-----------------------------------------"
         "----------------------------------*/\n";
+#if defined( WIN32 ) || defined( WIN64 )
+    os <<
+        "/*   Windows 32 and 64 bit porting by blueCAPE: http://www.bluecape.com.pt   *\\\n"
+        "|  Based on Windows porting (2.0.x v4) by Symscape: http://www.symscape.com   |\n"
+        "\\*---------------------------------------------------------------------------*/\n";
+#endif
 
     return os;
 }

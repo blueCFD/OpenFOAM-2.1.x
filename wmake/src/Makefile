@@ -42,14 +42,16 @@ SHELL      = /bin/sh
 .SUFFIXES:
 .SUFFIXES: .o
 
-
 #------------------------------------------------------------------------------
 # set compilation and dependency building rules
 #------------------------------------------------------------------------------
 
 GENERAL_RULES = $(WM_DIR)/rules/General
 RULES         = $(WM_DIR)/rules/$(WM_ARCH)$(WM_COMPILER)
-WMAKE_BIN     = $(WM_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)
+WMAKE_BIN    ?= $(WM_DIR)/platforms/$(WM_ARCH)$(WM_COMPILER)
+
+# Executable extension - independent of the global one
+EXE_EXTENSION ?=
 
 include $(RULES)/general
 include $(RULES)/$(WM_LINK_LANGUAGE)
@@ -59,31 +61,31 @@ include $(RULES)/$(WM_LINK_LANGUAGE)
 # targets
 #------------------------------------------------------------------------------
 
-all:  $(WMAKE_BIN)/dirToString $(WMAKE_BIN)/wmkdep $(WMAKE_BIN)/wmkdepend
+all:  $(WMAKE_BIN)/dirToString$(EXE_EXTENSION) $(WMAKE_BIN)/wmkdep$(EXE_EXTENSION) $(WMAKE_BIN)/wmkdepend$(EXE_EXTENSION)
 
 clean:
 	rm -f $(WMAKE_BIN)/* 2>/dev/null
 
 
-$(WMAKE_BIN)/dirToString: dirToString.c
+$(WMAKE_BIN)/dirToString$(EXE_EXTENSION): dirToString.c
 	@mkdir -p $(WMAKE_BIN)
-	$(cc) $(cFLAGS) dirToString.c -o $(WMAKE_BIN)/dirToString
+	$(cc) $(cFLAGS) dirToString.c -o $(WMAKE_BIN)/dirToString$(EXE_EXTENSION)
 
 
-$(WMAKE_BIN)/wmkdep: wmkdep.l
+$(WMAKE_BIN)/wmkdep$(EXE_EXTENSION): wmkdep.l
 	@mkdir -p $(WMAKE_BIN)
 	flex wmkdep.l
-	$(cc) $(cFLAGS) lex.yy.c -o $(WMAKE_BIN)/wmkdep
+	$(cc) $(cFLAGS) lex.yy.c -o $(WMAKE_BIN)/wmkdep$(EXE_EXTENSION)
 	@rm -f lex.yy.c 2>/dev/null
 
 
 # for bootstrapping - use generated files directly (instead of from .atg file)
-$(WMAKE_BIN)/wmkdepend: wmkdepend.cpp \
+$(WMAKE_BIN)/wmkdepend$(EXE_EXTENSION): wmkdepend.cpp \
     wmkdependParser.cpp wmkdependScanner.cpp \
     wmkdependParser.h   wmkdependScanner.h
 	@mkdir -p $(WMAKE_BIN)
 	$(CC) $(c++FLAGS) \
 	     wmkdepend.cpp wmkdependParser.cpp wmkdependScanner.cpp \
-	    -o $(WMAKE_BIN)/wmkdepend
+	    -o $(WMAKE_BIN)/wmkdepend$(EXE_EXTENSION)
 
 #------------------------------------------------------------------------------

@@ -66,11 +66,16 @@ scalar getMergeDistance(const polyMesh& mesh, const scalar mergeTol)
     // check writing tolerance
     if (mesh.time().writeFormat() == IOstream::ASCII)
     {
-        const scalar writeTol = std::pow
+        scalar writeTol = std::pow
         (
             scalar(10.0),
             -scalar(IOstream::defaultPrecision())
         );
+
+        #ifdef WIN32
+        //this was necessary due to some crazy bug...
+        writeTol -= SMALL;
+        #endif
 
         if (mergeTol < writeTol)
         {
@@ -78,7 +83,7 @@ scalar getMergeDistance(const polyMesh& mesh, const scalar mergeTol)
                 << "Your current settings specify ASCII writing with "
                 << IOstream::defaultPrecision() << " digits precision." << nl
                 << "Your merging tolerance (" << mergeTol
-                << ") is finer than this." << nl
+                << ") is finer than this (" << writeTol << ")." << nl
                 << "Change to binary writeFormat, "
                 << "or increase the writePrecision" << endl
                 << "or adjust the merge tolerance (mergeTol)."

@@ -18,4 +18,5 @@ EXE_LIBS = \
     -lchemistryModel \
     -lODE \
     -lthermophysicalFunctions \
+    -lcompressibleTurbulenceModel \
     -lspecie

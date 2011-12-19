@@ -367,6 +367,12 @@ scalar getMergeDistance
     Info<< "Merge tolerance : " << mergeTol << nl
         << "Write tolerance : " << writeTol << endl;
 
+    #ifdef WIN32
+    //this was necessary due to some crazy bug...
+    writeTol -= SMALL;
+    Info<< "Write tol. adj. : " << writeTol << endl;
+    #endif
+
     if (runTime.writeFormat() == IOstream::ASCII && mergeTol < writeTol)
     {
         FatalErrorIn("getMergeDistance")

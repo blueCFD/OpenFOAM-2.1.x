@@ -40,7 +40,8 @@ include $(RULES)/general
 # declare names of make system control files derived from file 'options'
 #------------------------------------------------------------------------------
 
-OPTIONS = $(WM_OPTIONS)/options
+WM_OPTIONS_LOCAL  ?= $(WM_OPTIONS)
+OPTIONS = $(WM_OPTIONS_LOCAL)/options
 
 #------------------------------------------------------------------------------
 # Declare dependency of all make system files on OPTIONS
@@ -48,7 +49,7 @@ OPTIONS = $(WM_OPTIONS)/options
 #------------------------------------------------------------------------------
 
 $(OPTIONS) : options
-	@$(WM_SCRIPTS)/makeDir $(WM_OPTIONS) ; $(CPP) $(GFLAGS) options | sed -e 's@   *@ @g' > $(OPTIONS)
+	@$(WM_SCRIPTS)/makeDir $(WM_OPTIONS_LOCAL) ; $(CPP) $(GFLAGS) options | sed -e 's@   *@ @g' > $(OPTIONS)
 
 
 #------------------------------------------------------------------------------
