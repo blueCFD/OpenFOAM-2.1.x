@@ -63,7 +63,7 @@ rem END of Process summoned options ---------------------------------
 set USER=ofuser
 set USERNAME=ofuser
 set WM_PROJECT=OpenFOAM
-set WM_PROJECT_VERSION=2.0
+set WM_PROJECT_VERSION=2.1
 set FOAM_INST_DIR=%HOME%
 rem set FOAM_INST_DIR=%HOME%\%WM_PROJECT%
 set WM_PROJECT_INST_DIR=%FOAM_INST_DIR%

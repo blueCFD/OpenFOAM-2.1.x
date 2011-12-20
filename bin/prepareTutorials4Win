@@ -92,11 +92,8 @@ for PDRFis in `find combustion -name "PDRFoam*"`; do
   done
 done
 
-echo "Fixing motorBike STL"
-cd incompressible/simpleFoam/motorBike
-chmod +x fixForWindows
-./fixForWindows
-cd -
+echo "Fixing motorBike geometry"
+fixMotorBikeGeom "$PWD"
 
 echo "Fixing multiphase/interFoam/les/nozzleFlow2D/Allrun (exponencial issue)"
 cd multiphase/interFoam/les/nozzleFlow2D
