@@ -435,7 +435,7 @@ fileName home()
 }
 
 
-fileName home(const word& userName)
+fileName home(const string& userName)
 {
     return home();
 }
@@ -474,7 +474,7 @@ bool chDir(const fileName& dir)
 }
 
 
-fileNameList findEtcFiles(const fileName& name, bool mandatory)
+fileNameList findEtcFiles(const fileName& name, bool mandatory, bool findFirst)
 {
     fileNameList results;
 
@@ -489,12 +489,20 @@ fileNameList findEtcFiles(const fileName& name, bool mandatory)
         if (isFile(fullName))
         {
             results.append(fullName);
+            if (findFirst)
+            {
+                return results;
+            }
         }
 
         fullName = searchDir/name;
         if (isFile(fullName))
         {
             results.append(fullName);
+            if (findFirst)
+            {
+                return results;
+            }
         }
     }
 
@@ -511,12 +519,20 @@ fileNameList findEtcFiles(const fileName& name, bool mandatory)
             if (isFile(fullName))
             {
                 results.append(fullName);
+                if (findFirst)
+                {
+                    return results;
+                }
             }
 
             fullName = searchDir/name;
             if (isFile(fullName))
             {
                 results.append(fullName);
+                if (findFirst)
+                {
+                    return results;
+                }
             }
         }
     }
@@ -533,12 +549,20 @@ fileNameList findEtcFiles(const fileName& name, bool mandatory)
             if (isFile(fullName))
             {
                 results.append(fullName);
+                if (findFirst)
+                {
+                    return results;
+                }
             }
 
             fullName = searchDir/"site"/name;
             if (isFile(fullName))
             {
                 results.append(fullName);
+                if (findFirst)
+                {
+                    return results;
+                }
             }
         }
     }
@@ -553,6 +577,10 @@ fileNameList findEtcFiles(const fileName& name, bool mandatory)
         if (isFile(fullName))
         {
             results.append(fullName);
+            if (findFirst)
+            {
+                return results;
+            }
         }
     }
 
