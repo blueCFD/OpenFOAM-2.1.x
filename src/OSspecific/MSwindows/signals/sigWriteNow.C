@@ -91,12 +91,6 @@ Foam::sigWriteNow::sigWriteNow(const bool verbose, Time& runTime)
 
 Foam::sigWriteNow::~sigWriteNow()
 {
-    if (verbose)
-    {
-        WarningIn("Foam::sigWriteNow::~sigWriteNow()")
-          << "Not implemented."
-          << endl;
-    }
 }
 
 

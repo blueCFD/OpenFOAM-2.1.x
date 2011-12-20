@@ -49,13 +49,6 @@ __p_sig_fn_t Foam::sigStopAtWriteNow::oldAction_ = SIG_DFL;
 
 void Foam::sigStopAtWriteNow::sigHandler(int)
 {
-    if (verbose)
-    {
-        WarningIn("Foam::sigStopAtWriteNow::sigHandler(int)")
-          << "Not implemented."
-          << endl;
-    }
-
     // Update jobInfo file
     jobInfo.signalEnd();
 
@@ -105,12 +98,6 @@ Foam::sigStopAtWriteNow::sigStopAtWriteNow
 
 Foam::sigStopAtWriteNow::~sigStopAtWriteNow()
 {
-    if (verbose)
-    {
-        WarningIn("Foam::sigStopAtWriteNow::~sigStopAtWriteNow()")
-          << "Not implemented."
-          << endl;
-    }
 }
 
 
