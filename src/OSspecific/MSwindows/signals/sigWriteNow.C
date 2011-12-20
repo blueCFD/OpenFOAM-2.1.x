@@ -42,7 +42,7 @@ int Foam::sigWriteNow::signal_
 static Foam::Time* runTimePtr_ = NULL;
 
 
-__p_sig_fn_t Foam::sigStopAtWriteNow::oldAction_ = SIG_DFL;
+__p_sig_fn_t Foam::sigWriteNow::oldAction_ = SIG_DFL;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
