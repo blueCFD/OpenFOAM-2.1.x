@@ -19,6 +19,7 @@ EXE_LIBS = \
     -lcompressibleMultiPhaseModel \
     -linterfaceProperties \
     -lincompressibleTransportModels \
+    -lincompressibleTurbulenceModel \
     -lcompressibleMultiphaseEulerianInterfacialModels \
     /*-lcompressibleKineticTheoryModel*/ \
     -lincompressibleLESModels \
