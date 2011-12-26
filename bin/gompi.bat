@@ -29,8 +29,16 @@ rem
 rem ------------------------------------------------------------------------------
 
 set /A x_numprocs=0
-for /D %%a in (processor*) do @set /A x_numprocs=x_numprocs+1
 set MACHINEFILE=
+
+rem simple count
+rem for /D %%a in (processor*) do @set /A x_numprocs=x_numprocs+1
+
+rem read directly from decomposeParDict
+setlocal enableextensions enabledelayedexpansion
+FOR /F "eol=» tokens=1,2 delims=; " %%i in (system\decomposeParDict) do (
+  IF "%%i" == "numberOfSubdomains" set x_numprocs=%%j
+)
 
 IF EXIST "hostfile" set MACHINEFILE=hostfile
 IF EXIST "machines" set MACHINEFILE=machines
