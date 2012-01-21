@@ -31,6 +31,22 @@ License
 
 #include <cmath>
 
+#if defined(MSWIN)
+#define j0f _j0
+#define j1f _j1
+#define jnf _jn
+#define y0f _y0
+#define y1f _y1
+#define ynf _yn
+#elif defined(DARWIN)
+#define j0f j0
+#define j1f j1
+#define jnf jn
+#define y0f y0
+#define y1f y1
+#define ynf yn
+#endif
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

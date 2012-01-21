@@ -28,6 +28,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Symbol to force loading at runtime
+extern "C"
+void incompressibleLESModelsLoad()
+{}
+
+
 namespace Foam
 {
 namespace incompressible

@@ -1,3 +1,8 @@
+#ifdef MSWIN
+    // Rename K to k_ to prevent name clashes on Windows with k
+    IOobject::replaceFileName("K", "K_");
+#endif
+
     // Initialise fluid field pointer lists
     PtrList<basicRhoThermo> thermoFluid(fluidRegions.size());
     PtrList<volScalarField> rhoFluid(fluidRegions.size());

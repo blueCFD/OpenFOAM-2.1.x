@@ -1,0 +1,5 @@
+cudaGpu.C
+PBiCGgpu.C
+PCGgpu.C
+
+LIB = $(FOAM_GPU_LIBBIN)/libgpu

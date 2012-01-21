@@ -30,6 +30,12 @@ License
 #include "scalar.H"
 #include "vector.H"
 
+// Symbol to force loading at runtime
+extern "C"
+void lagrangianIntermediateLoad()
+{}
+
+
 namespace Foam
 {
     makeIntegrationScheme(scalar);

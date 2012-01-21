@@ -1,6 +1,22 @@
 EXE_INC = -I$(OBJECTS_DIR)
 
+#ifdef MSWIN
+
+ifeq ($(LINK_PLIB),)
+ LIB_LIBS = $(FOAM_LIBBIN)/dummy/libPstream.o
+else
+ LIB_LIBS = -L$(FOAM_LIBBIN)/dummy -lPstream
+endif
+
+LIB_LIBS += \
+    $(FOAM_LIBBIN)/libOSspecific.o \
+    -lz
+
+#else
 LIB_LIBS = \
     $(FOAM_LIBBIN)/libOSspecific.o \
     -L$(FOAM_LIBBIN)/dummy -lPstream \
-    -lz
+    -lz -ldl
+#endif
+
+PROJECT_LIBS =

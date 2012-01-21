@@ -53,7 +53,6 @@ Description
 #include <sys/socket.h>
 #include <netdb.h>
 #include <dlfcn.h>
-#include <link.h>
 
 #include <netinet/in.h>
 
@@ -71,19 +70,19 @@ defineTypeNameAndDebug(Foam::POSIX, 0);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-pid_t Foam::pid()
+Foam::PID_T Foam::pid()
 {
     return ::getpid();
 }
 
 
-pid_t Foam::ppid()
+Foam::PID_T Foam::ppid()
 {
     return ::getppid();
 }
 
 
-pid_t Foam::pgid()
+Foam::PID_T Foam::pgid()
 {
     return ::getpgrp();
 }
@@ -1161,14 +1160,37 @@ int Foam::system(const std::string& command)
 }
 
 
-void* Foam::dlOpen(const fileName& lib, const bool check)
+void* Foam::dlOpen(const fileName& libName, const bool check)
 {
     if (POSIX::debug)
     {
         std::cout<< "dlOpen(const fileName&)"
-            << " : dlopen of " << lib << std::endl;
+            << " : dlopen of " << libName << std::endl;
     }
-    void* handle = ::dlopen(lib.c_str(), RTLD_LAZY|RTLD_GLOBAL);
+
+    Foam::string unixLibName(libName);
+    char const * const soExt = ".so";
+  
+#ifdef DARWIN
+    char const * const unixExt = ".dylib";
+    unixLibName.replace(soExt, unixExt);
+#else
+    char const * const unixExt = soExt;
+#endif
+  
+    // Assume libName is of the form, lib<name>.so
+    void* handle = ::dlopen(unixLibName.c_str(), RTLD_LAZY|RTLD_GLOBAL);
+
+    if (NULL == handle)
+    {
+        // Try assuming libName = name
+        unixLibName = "lib";
+        unixLibName += libName;
+        unixLibName += unixExt;
+      
+        handle = 
+          ::dlopen(unixLibName.c_str(), RTLD_LAZY|RTLD_GLOBAL);
+    }
 
     if (!handle && check)
     {
@@ -1181,7 +1203,7 @@ void* Foam::dlOpen(const fileName& lib, const bool check)
     {
         std::cout
             << "dlOpen(const fileName&)"
-            << " : dlopen of " << lib
+            << " : dlopen of " << libName
             << " handle " << handle << std::endl;
     }
 
@@ -1256,6 +1278,18 @@ bool Foam::dlSymFound(void* handle, const std::string& symbol)
 }
 
 
+#ifdef DARWIN
+
+Foam::fileNameList Foam::dlLoaded()
+{
+  DynamicList<fileName> libs;
+  return libs;
+}
+
+#else
+
+#include <link.h>
+
 static int collectLibsCallback
 (
     struct dl_phdr_info *info,
@@ -1282,6 +1316,8 @@ Foam::fileNameList Foam::dlLoaded()
     }
     return libs;
 }
+
+#endif // not DARWIN
 
 
 void Foam::osRandomSeed(const label seed)
@@ -1311,6 +1347,12 @@ Foam::scalar Foam::osRandomDouble()
 #else
     return drand48();
 #endif
+}
+
+
+std::string Foam::toUnixPath(const std::string & path)
+{
+  return path;
 }
 
 

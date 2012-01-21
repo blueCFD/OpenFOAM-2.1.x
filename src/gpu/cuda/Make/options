@@ -1,0 +1,5 @@
+include $(RULES)/gpulib$(WM_GPU)
+
+EXE_INC  = $(GPUFLAGS) $(GPUINC)
+LIB_LIBS = $(GPULIBS)
+

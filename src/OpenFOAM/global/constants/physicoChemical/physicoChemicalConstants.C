@@ -74,13 +74,21 @@ const Foam::dimensionedScalar Foam::constant::physicoChemical::sigma
         dimensionedScalar
         (
             "sigma",
-            dimensionedScalar
+            (dimensionedScalar
             (
                 "C",
                 dimless,
                 sqr(constant::mathematical::pi)/60.0
             )
-           *pow4(k)/(pow3(constant::universal::hr)*sqr(constant::universal::c))
+	     *pow4(k)/(pow3(constant::universal::hr)*sqr(constant::universal::c)))
+#ifdef WM_SP
+	    .dimensions(),
+	    // Assuming this is the Stefan-Boltzmann constant
+	    // http://en.wikipedia.org/wiki/Stefan%E2%80%93Boltzmann_law
+	    // Single precision can't handle the pow4(k), 
+	    // where k is Boltzmann constant = 1.3806488e-23
+	    5.6704e-8f
+#endif	    
         )
     )
 );

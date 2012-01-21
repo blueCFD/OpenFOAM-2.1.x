@@ -1,0 +1,16 @@
+CPP        = cpp -traditional-cpp $(GFLAGS)
+LD         = ld
+
+PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_LIBBIN)/dummy -lPstream
+
+include $(GENERAL_RULES)/standard
+
+include $(RULES)/X
+include $(RULES)/c
+include $(RULES)/c++
+
+SO      = dylib
+
+# Ensure we know what OS we are compiling for
+# during MakefileFiles and MakefileOptions
+GFLAGS  += -DDARWIN -DLITTLE_ENDIAN

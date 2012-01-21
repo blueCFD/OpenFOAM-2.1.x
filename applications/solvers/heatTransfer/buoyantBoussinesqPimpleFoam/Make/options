@@ -10,5 +10,5 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools \
     -lincompressibleTurbulenceModel \
-    -lincompressibleRASModels \
+    -lincompressibleRASModels -u incompressibleRASModelsLoad \
     -lincompressibleTransportModels

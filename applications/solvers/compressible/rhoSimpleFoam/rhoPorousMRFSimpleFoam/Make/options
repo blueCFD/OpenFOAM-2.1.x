@@ -13,6 +13,6 @@ EXE_LIBS = \
     -lthermalPorousZone \
     -lspecie \
     -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
     -lfiniteVolume \
     -lmeshTools

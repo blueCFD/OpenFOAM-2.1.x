@@ -1,0 +1,3 @@
+GPUFLAGS =
+GPUINC   = -I$(CUDA_ARCH_PATH)/src
+GPULIBS  = -L$(CUDA_ARCH_PATH)/install/lib -lofgpu

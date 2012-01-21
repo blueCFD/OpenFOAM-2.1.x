@@ -4,5 +4,5 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 EXE_LIBS = \
-    -ldistributionModels \
+    -ldistributionModels -u distributionModelsLoad \
     -lsampling

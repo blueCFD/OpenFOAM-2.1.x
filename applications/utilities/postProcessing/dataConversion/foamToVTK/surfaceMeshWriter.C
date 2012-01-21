@@ -41,7 +41,10 @@ Foam::surfaceMeshWriter::surfaceMeshWriter
     binary_(binary),
     pp_(pp),
     fName_(fName),
-    os_(fName.c_str())
+    // Use binary mode in case we write binary.
+    // Causes windows reading to fail if we don't
+    os_(fName.c_str(), 
+	ios_base::out|ios_base::binary)
 {
     // Write header
     writeFuns::writeHeader(os_, binary_, name);

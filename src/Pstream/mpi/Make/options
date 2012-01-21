@@ -3,3 +3,9 @@ sinclude $(RULES)/mplib$(WM_MPLIB)
 
 EXE_INC  = $(PFLAGS) $(PINC)
 LIB_LIBS = $(PLIBS)
+
+#ifdef MSWIN
+LIB_LIBS += -L$(FOAM_LIBBIN) -lOpenFOAM
+#endif
+
+PROJECT_LIBS =

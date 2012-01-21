@@ -9,6 +9,7 @@ EXE_INC = \
 EXE_LIBS = \
     -lbasicThermophysicalModels \
     -lspecie \
-    -lcompressibleRASModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
     -lfiniteVolume \
-    -lmeshTools
+    -lmeshTools \
+    -lcompressibleTurbulenceModel

@@ -1,0 +1,11 @@
+#!/bin/sh
+set -x
+
+if [ "NONE" = "$WM_MPLIB" ]; then
+    exit 0
+fi
+
+wmake decomposePar
+wmake reconstructPar
+#wmake reconstructParMesh
+#wmake redistributeParMesh

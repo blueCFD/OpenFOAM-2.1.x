@@ -25,7 +25,7 @@ License
 
 #include "dlLibraryTable.H"
 #include "OSspecific.H"
-#include "long.H"
+#include "longLong.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -60,7 +60,7 @@ Foam::dlLibraryTable::~dlLibraryTable()
             {
                 Info<< "dlLibraryTable::~dlLibraryTable() : closing "
                     << libNames_[i]
-                    << " with handle " << long(libPtrs_[i]) << endl;
+                    << " with handle " << reinterpret_cast<long long>(libPtrs_[i]) << endl;
             }
             dlClose(libPtrs_[i]);
         }
@@ -83,7 +83,7 @@ bool Foam::dlLibraryTable::open
         if (debug)
         {
             Info<< "dlLibraryTable::open : opened " << functionLibName
-                << " resulting in handle " << long(functionLibPtr) << endl;
+                << " resulting in handle " << reinterpret_cast<long long>(functionLibPtr) << endl;
         }
 
         if (!functionLibPtr)
@@ -134,7 +134,7 @@ bool Foam::dlLibraryTable::close
         if (debug)
         {
             Info<< "dlLibraryTable::close : closing " << functionLibName
-                << " with handle " << long(libPtrs_[index]) << endl;
+                << " with handle " << reinterpret_cast<long long>(libPtrs_[index]) << endl;
         }
 
         bool ok = dlClose(libPtrs_[index]);

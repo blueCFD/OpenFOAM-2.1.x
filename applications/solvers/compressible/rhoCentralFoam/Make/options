@@ -13,6 +13,6 @@ EXE_LIBS = \
     -lspecie \
     -lrhoCentralFoam \
     -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
+    -lcompressibleLESModels -u compressibleLESModelsLoad \
     -lmeshTools

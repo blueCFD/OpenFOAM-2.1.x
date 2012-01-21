@@ -15,8 +15,8 @@ EXE_LIBS = \
     -lbasicSolidThermo \
     -lspecie \
     -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
+    -lcompressibleLESModels -u compressibleLESModelsLoad \
     -lmeshTools \
     -lfiniteVolume \
     -lradiationModels

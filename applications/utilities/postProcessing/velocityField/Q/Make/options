@@ -5,4 +5,4 @@ EXE_INC = \
 EXE_LIBS = \
     $(FOAM_LIBBIN)/postCalc.o \
     -lfiniteVolume \
-    -lgenericPatchFields
+    -lgenericPatchFields -u genericPatchFieldsLoad

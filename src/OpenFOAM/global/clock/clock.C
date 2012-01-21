@@ -121,14 +121,14 @@ Foam::clock::clock()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-time_t Foam::clock::elapsedClockTime() const
+Foam::clock::TIME_T Foam::clock::elapsedClockTime() const
 {
     newTime_ = getTime();
     return newTime_ - startTime_;
 }
 
 
-time_t Foam::clock::clockTimeIncrement() const
+Foam::clock::TIME_T Foam::clock::clockTimeIncrement() const
 {
     lastTime_ = newTime_;
     newTime_ = getTime();

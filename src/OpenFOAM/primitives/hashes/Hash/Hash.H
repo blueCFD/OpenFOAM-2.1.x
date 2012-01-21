@@ -106,18 +106,19 @@ template<>
 class Hash<void*>
 {
 public:
+   typedef intptr_t HashType;
 
     Hash()
     {}
 
     unsigned operator()(const void* const& p, unsigned seed) const
     {
-        return Hash<long>()(long(p), seed);
+        return Hash<HashType>()(HashType(p), seed);
     }
 
     unsigned operator()(const void* const& p) const
     {
-        return Hash<long>()(long(p));
+        return Hash<HashType>()(HashType(p));
     }
 
 };

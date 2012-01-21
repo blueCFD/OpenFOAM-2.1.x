@@ -7,4 +7,5 @@ EXE_LIBS = \
     -lmeshTools \
     -ldynamicMesh \
     -lfiniteVolume \
-    -lcompressibleRASModels
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
+    -lcompressibleTurbulenceModel

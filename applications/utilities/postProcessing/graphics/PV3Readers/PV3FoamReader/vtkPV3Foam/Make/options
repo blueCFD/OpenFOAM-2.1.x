@@ -17,7 +17,7 @@ EXE_INC = \
 LIB_LIBS = \
     -lmeshTools \
     -lfiniteVolume \
-    -lgenericPatchFields \
+    -lgenericPatchFields -u genericPatchFieldsLoad \
     -llagrangian \
     -L$(FOAM_LIBBIN) -lvtkPV3Readers \
     $(GLIBS)

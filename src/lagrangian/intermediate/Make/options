@@ -44,4 +44,3 @@ LIB_LIBS = \
     -lsurfaceFilmModels \
     -ldynamicFvMesh \
     -lsampling
-

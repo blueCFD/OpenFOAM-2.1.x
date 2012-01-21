@@ -1,0 +1,22 @@
+EXE	=
+#MJ LIB	= .a
+LIB	= .dll
+OBJ	= .o
+
+MAKE	= make
+AR	= x86_64-w64-mingw32-gcc  
+
+CAT	= cat
+CC	= x86_64-w64-mingw32-gcc
+CCP     = x86_64-w64-mingw32-gcc
+CCD     = 
+CFLAGS	= -O3 -m64 -Wall -DMSWIN -DNDEBUG -Drestrict=__restrict -DCOMMON_WINDOWS -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_RENAME -DCOMMON_RANDOM_RAND -DCOMMON_STUB_FORK -D'pipe(pfds)=_pipe(pfds,1024,0x8000)'
+LDFLAGS	= -lz
+ARFLAGS = $(CFLAGS) -shared -Wl,--output-def,libscotch.def,--out-implib,libscotch.a,--enable-auto-import,--strip-all -o
+CP	= cp 
+LEX	= flex
+LN	= ln
+MKDIR	= mkdir
+MV	= mv
+RANLIB	= echo
+YACC	= bison -y

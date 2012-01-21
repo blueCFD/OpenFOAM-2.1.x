@@ -1,3 +1,7 @@
+#ifdef MSWIN
+    // Rename B to B_ to prevent name clashes on Windows with B
+    IOobject::replaceFileName("B", "B_");
+#endif
     Info<< "Reading thermophysical properties\n" << endl;
 
     autoPtr<hhuCombustionThermo> pThermo

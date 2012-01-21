@@ -95,8 +95,11 @@ inline bool Foam::fileName::valid(char c)
 {
     return
     (
-        !isspace(c)
-     && c != '"'   // string quote
+    // Under windows spaces are common in file paths,
+    // so can't disallow them. Prefer also
+    // to allow them under *nix too.
+    //    !isspace(c) &&
+     c != '"'   // string quote
      && c != '\''  // string quote
     );
 }

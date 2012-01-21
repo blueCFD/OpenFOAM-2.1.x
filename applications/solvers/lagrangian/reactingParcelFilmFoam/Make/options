@@ -26,8 +26,8 @@ EXE_INC = \
 EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
+    -lcompressibleLESModels -u compressibleLESModelsLoad \
     -lspecie \
     -lbasicThermophysicalModels \
     -lsolidProperties \
@@ -39,6 +39,9 @@ EXE_LIBS = \
     -lregionModels \
     -lradiationModels \
     -lsurfaceFilmModels \
-    -llagrangianIntermediate \
+    -llagrangianIntermediate -u lagrangianIntermediateLoad \
     -lODE \
-    -lcombustionModels
+    -lcombustionModels \
+    -lsampling \
+    -lcompressibleTurbulenceModel \
+    -llagrangian

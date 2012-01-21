@@ -1,0 +1,22 @@
+.SUFFIXES: .C .cxx .cc .cpp
+
+c++WARN     = -Wall -Wextra -Wno-unused-parameter -Wold-style-cast -Wnon-virtual-dtor
+
+CC          = g++
+
+include $(RULES)/c++$(WM_COMPILE_OPTION)
+
+ptFLAGS     = -DNoRepository -ftemplate-depth-40
+mac-OSX-10 = -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6
+
+c++FLAGS    = $(GFLAGS) $(mac-OSX-10) $(c++WARN) $(c++OPT) $(c++DBUG) $(ptFLAGS) $(LIB_HEADER_DIRS) -fPIC
+
+Ctoo        = $(WM_SCHEDULER) $(CC) $(c++FLAGS) -c $$SOURCE -o $@
+cxxtoo      = $(Ctoo)
+cctoo       = $(Ctoo)
+cpptoo      = $(Ctoo)
+
+LINK_LIBS   = $(c++DBUG)
+
+LINKLIBSO   = $(CC) $(c++FLAGS) -dynamiclib -flat_namespace -undefined suppress
+LINKEXE     = $(CC) $(c++FLAGS) -flat_namespace -undefined suppress

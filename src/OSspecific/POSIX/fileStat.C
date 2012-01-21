@@ -29,7 +29,10 @@ License
 
 #include <signal.h>
 #include <unistd.h>
+
+#ifndef DARWIN
 #include <sys/sysmacros.h>
+#endif
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

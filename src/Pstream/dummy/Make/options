@@ -1,0 +1,5 @@
+#ifdef MSWIN
+LIB_LIBS = -lOpenFOAM
+#endif
+
+PROJECT_LIBS = 

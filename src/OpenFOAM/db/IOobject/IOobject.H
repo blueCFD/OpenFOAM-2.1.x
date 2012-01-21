@@ -154,6 +154,13 @@ private:
         //- IOobject state
         objectState objState_;
 
+private:
+
+    // Private member functions
+
+        //- Unique on disk file name.
+        const word& uniqueFileName() const;
+
 protected:
 
     // Protected Member Functions
@@ -339,7 +346,7 @@ public:
             //- Return complete path + object name
             fileName objectPath() const
             {
-                return path()/name();
+                return path()/uniqueFileName();
             }
 
             //- Return complete path + object name if the file exists
@@ -401,6 +408,12 @@ public:
     // Member operators
 
         void operator=(const IOobject&);
+
+    // Static functions
+
+        //- Set unique on disk file name 
+        //- e.g., b -> b_ to avoid upper/lowercase clash with B
+        static void replaceFileName(const word& from, const word& to);
 };
 
 

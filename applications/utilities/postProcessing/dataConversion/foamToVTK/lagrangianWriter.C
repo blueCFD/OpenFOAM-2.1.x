@@ -43,7 +43,10 @@ Foam::lagrangianWriter::lagrangianWriter
     binary_(binary),
     fName_(fName),
     cloudName_(cloudName),
-    os_(fName.c_str())
+    // Use binary mode in case we write binary.
+    // Causes windows reading to fail if we don't
+    os_(fName.c_str(), 
+	ios_base::out|ios_base::binary)
 {
     const fvMesh& mesh = vMesh_.mesh();
 

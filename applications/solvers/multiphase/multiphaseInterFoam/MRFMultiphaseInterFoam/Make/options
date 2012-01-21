@@ -11,9 +11,9 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lmultiphaseInterFoam \
-    -linterfaceProperties \
+    -linterfaceProperties -u interfacePropertiesLoad \
     -lincompressibleTransportModels \
     -lincompressibleTurbulenceModel \
-    -lincompressibleRASModels \
-    -lincompressibleLESModels \
+    -lincompressibleRASModels -u incompressibleRASModelsLoad \
+    -lincompressibleLESModels -u incompressibleLESModelsLoad \
     -lfiniteVolume

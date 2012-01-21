@@ -27,6 +27,13 @@ License
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
+
+// Symbol to force loading at runtime
+extern "C"
+void distributionModelsLoad()
+{}
+
+
 namespace Foam
 {
     namespace distributionModels

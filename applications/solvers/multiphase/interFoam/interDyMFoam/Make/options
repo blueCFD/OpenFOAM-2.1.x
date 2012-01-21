@@ -10,11 +10,12 @@ EXE_INC = \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude
 
 EXE_LIBS = \
-    -ltwoPhaseInterfaceProperties \
+    -linterfaceProperties -u interfacePropertiesLoad \
+    -ltwoPhaseInterfaceProperties -u twoPhaseInterfacePropertiesLoad \
     -lincompressibleTransportModels \
     -lincompressibleTurbulenceModel \
-    -lincompressibleRASModels \
-    -lincompressibleLESModels \
+    -lincompressibleRASModels -u incompressibleRASModelsLoad \
+    -lincompressibleLESModels -u incompressibleLESModelsLoad \
     -lfiniteVolume \
     -ldynamicMesh \
     -lmeshTools \

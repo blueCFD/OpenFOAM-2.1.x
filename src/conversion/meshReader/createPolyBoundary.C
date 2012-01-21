@@ -378,8 +378,9 @@ Foam::meshReader::polyBoundaryPatches(const polyMesh& mesh)
     label nPatches = patchStarts_.size();
 
     // avoid empty patches - move to the end of the lists and truncate
+    // Size loop according to patchStarts_ can be smaller than patchSizes_
     labelList oldToNew = identity(nPatches);
-    forAll(patchSizes_, patchI)
+    forAll(patchStarts_, patchI)
     {
         if (patchSizes_[patchI] > 0)
         {

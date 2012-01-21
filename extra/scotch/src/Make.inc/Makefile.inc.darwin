@@ -1,0 +1,22 @@
+EXE	=
+#MJ LIB	= .a
+LIB	= .dylib
+OBJ	= .o
+
+MAKE	= make
+AR	= gcc
+
+CAT	= cat
+CC	= gcc
+CCP     = gcc
+CCD     = gcc
+CFLAGS	= -O3 -fPIC -DCOMMON_TIMING_OLD -Drestrict=__restrict -DCOMMON_FILE_COMPRESS_GZ -DCOMMON_PTHREAD -DCOMMON_RANDOM_FIXED_SEED -DSCOTCH_PTHREAD -DSCOTCH_RENAME -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6
+LDFLAGS	= -lz -lm
+ARFLAGS	= $(CFLAGS) -dynamiclib -flat_namespace -undefined suppress -o
+CP	= cp
+LEX	= flex
+LN	= ln
+MKDIR	= mkdir
+MV	= mv
+RANLIB	= echo
+YACC	= bison -y

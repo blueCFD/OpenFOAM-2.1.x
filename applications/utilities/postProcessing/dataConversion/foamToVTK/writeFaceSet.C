@@ -39,7 +39,10 @@ void Foam::writeFaceSet
 {
     const faceList& faces = vMesh.mesh().faces();
 
-    std::ofstream ostr(fileName.c_str());
+    // Use binary mode in case we write binary.
+    // Causes windows reading to fail if we don't
+    std::ofstream ostr(fileName.c_str(), 
+		       ios_base::out|ios_base::binary);
 
     writeFuns::writeHeader
     (

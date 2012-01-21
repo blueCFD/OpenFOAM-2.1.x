@@ -105,7 +105,7 @@ $(constraintFvPatchFields)/empty/emptyFvPatchFields.C
 $(constraintFvPatchFields)/jumpCyclic/jumpCyclicFvPatchFields.C
 $(constraintFvPatchFields)/nonuniformTransformCyclic/nonuniformTransformCyclicFvPatchFields.C
 $(constraintFvPatchFields)/processor/processorFvPatchFields.C
-$(constraintFvPatchFields)/processor/processorFvPatchScalarField.C
+/*$(constraintFvPatchFields)/processor/processorFvPatchScalarField.C*/
 $(constraintFvPatchFields)/processorCyclic/processorCyclicFvPatchFields.C
 $(constraintFvPatchFields)/processorCyclic/processorCyclicFvPatchScalarField.C
 $(constraintFvPatchFields)/symmetry/symmetryFvPatchFields.C

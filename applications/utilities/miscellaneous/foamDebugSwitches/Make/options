@@ -6,13 +6,13 @@ EXE_LIBS = \
     -lblockMesh \
     -lchemistryModel \
     -lcoalCombustion \
-    -lcompressibleLESModels \
-    -lcompressibleRASModels \
+    -lcompressibleLESModels -u compressibleLESModelsLoad \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
     -lcompressibleTurbulenceModel \
     -lconversion \
     -ldecompositionMethods \
     -ldistributed \
-    -ldistributionModels \
+    -ldistributionModels -u distributionModelsLoad \
     -ldsmc \
     -ldynamicFvMesh \
     -ldynamicMesh \
@@ -24,16 +24,16 @@ EXE_LIBS = \
     -lfoamCalcFunctions \
     -lforces \
     -lfvMotionSolvers \
-    -lgenericPatchFields \
-    -lincompressibleLESModels \
-    -lincompressibleRASModels \
+    -lgenericPatchFields -u genericPatchFieldsLoad \
+    -lincompressibleLESModels -u incompressibleLESModelsLoad \
+    -lincompressibleRASModels -u incompressibleRASModelsLoad \
     -lincompressibleTransportModels \
     -lincompressibleTurbulenceModel \
-    -linterfaceProperties \
+    -linterfaceProperties -u interfacePropertiesLoad \
     -lIOFunctionObjects \
     -ljobControl \
     -llagrangian \
-    -llagrangianIntermediate \
+    -llagrangianIntermediate -u lagrangianIntermediateLoad \
     -llaminarFlameSpeedModels \
     -lLESdeltas \
     -lLESfilters \

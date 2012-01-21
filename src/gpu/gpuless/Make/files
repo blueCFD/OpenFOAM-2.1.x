@@ -1,0 +1,4 @@
+PBiCGgpu.C
+PCGgpu.C
+
+LIB = $(FOAM_LIBBIN)/gpuless/libgpu

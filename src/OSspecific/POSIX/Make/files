@@ -18,10 +18,10 @@ memInfo/memInfo.C
  */
 fileMonitor.C
 
-#ifdef SunOS64
-dummyPrintStack.C
-#else
+#ifdef linux
 printStack.C
+#else
+dummyPrintStack.C
 #endif
 
 LIB = $(FOAM_LIBBIN)/libOSspecific

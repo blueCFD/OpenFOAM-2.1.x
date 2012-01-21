@@ -22,7 +22,7 @@ EXE_LIBS = \
     -lengine \
     -lmeshTools \
     -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
     -lbasicThermophysicalModels \
     -lreactionThermophysicalModels \
     -lspecie \

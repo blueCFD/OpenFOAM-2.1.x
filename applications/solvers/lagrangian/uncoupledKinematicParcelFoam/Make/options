@@ -13,14 +13,14 @@ EXE_INC = \
 
 EXE_LIBS = \
     -llagrangian \
-    -llagrangianIntermediate \
+    -llagrangianIntermediate -u lagrangianIntermediateLoad \
     -lthermophysicalFunctions \
     -lbasicThermophysicalModels \
     -lspecie \
     -lradiationModels \
     -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
+    -lcompressibleLESModels -u compressibleLESModelsLoad \
     -lfiniteVolume \
     -lmeshTools \
     -lregionModels \

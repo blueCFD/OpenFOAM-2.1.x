@@ -29,6 +29,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Symbol to force loading at runtime
+extern "C"
+void compressibleRASModelsLoad()
+{}
+
+
 namespace Foam
 {
 namespace compressible
@@ -39,6 +45,7 @@ namespace compressible
 defineTypeNameAndDebug(RASModel, 0);
 defineRunTimeSelectionTable(RASModel, dictionary);
 addToRunTimeSelectionTable(turbulenceModel, RASModel, turbulenceModel);
+
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 

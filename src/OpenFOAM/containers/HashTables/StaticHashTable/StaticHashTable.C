@@ -32,6 +32,7 @@ License
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
+inline
 Foam::label Foam::StaticHashTableCore::canonicalSize(const label size)
 {
     if (size < 1)

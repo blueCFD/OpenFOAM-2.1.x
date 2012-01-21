@@ -5,12 +5,14 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/functions/Polynomial \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalFunctions/lnInclude \
-    -I$(LIB_SRC)/turbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/turbulenceModels/RAS/compressible/lnInclude \
     -I$(LIB_SRC)/ODE/lnInclude
 
 LIB_LIBS = \
+    -lfiniteVolume \
     -lbasicThermophysicalModels \
     -lreactionThermophysicalModels \
     -lspecie \
     -lthermophysicalFunctions \
+    -lcompressibleRASModels \
     -lODE

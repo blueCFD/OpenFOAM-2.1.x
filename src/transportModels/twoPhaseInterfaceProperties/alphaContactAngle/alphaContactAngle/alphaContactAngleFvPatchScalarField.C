@@ -30,6 +30,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Symbol to force loading at runtime
+extern "C"
+void twoPhaseInterfacePropertiesLoad()
+{}
+
+
 namespace Foam
 {
     defineTypeNameAndDebug(alphaContactAngleFvPatchScalarField, 0);

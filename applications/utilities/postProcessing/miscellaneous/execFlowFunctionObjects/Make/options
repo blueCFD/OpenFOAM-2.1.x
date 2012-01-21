@@ -9,11 +9,13 @@ EXE_INC = \
 EXE_LIBS = \
     $(FOAM_LIBBIN)/postCalc.o \
     -lincompressibleTransportModels \
-    -lincompressibleRASModels \
-    -lincompressibleLESModels \
+    -lincompressibleRASModels -u incompressibleRASModelsLoad \
+    -lincompressibleLESModels -u incompressibleLESModelsLoad \
     -lbasicThermophysicalModels \
     -lspecie \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
+    -lcompressibleLESModels -u compressibleLESModelsLoad \
     -lfiniteVolume \
-    -lgenericPatchFields
+    -lgenericPatchFields -u genericPatchFieldsLoad \
+    -lincompressibleTurbulenceModel \
+    -lcompressibleTurbulenceModel

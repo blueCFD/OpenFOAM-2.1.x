@@ -8,7 +8,8 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
-    -lincompressibleRASModels \
+    -lincompressibleRASModels -u incompressibleRASModelsLoad \
     -lincompressibleTransportModels \
     -lfiniteVolume \
-    -lmeshTools
+    -lmeshTools \
+    -lincompressibleTurbulenceModel

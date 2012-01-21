@@ -1,0 +1,3 @@
+PFLAGS     = 
+PINC       = -I$(MPI_ARCH_PATH)/Inc
+PLIBS      = -L$(MPI_ARCH_PATH)/Lib/amd64 -lmsmpi

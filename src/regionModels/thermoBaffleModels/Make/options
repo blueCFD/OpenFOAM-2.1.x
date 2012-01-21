@@ -17,4 +17,7 @@ LIB_LIBS = \
     -lfiniteVolume \
     -lmeshTools \
     -lOpenFOAM \
-    -lsolid
+    -lsolid \
+    -lspecie \
+    -lcompressibleTurbulenceModel \
+    -lbasicThermophysicalModels

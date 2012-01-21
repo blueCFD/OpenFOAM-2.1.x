@@ -42,7 +42,10 @@ Foam::patchWriter::patchWriter
     nearCellValue_(nearCellValue),
     fName_(fName),
     patchIDs_(patchIDs),
-    os_(fName.c_str())
+    // Use binary mode in case we write binary.
+    // Causes windows reading to fail if we don't
+    os_(fName.c_str(), 
+	ios_base::out|ios_base::binary)
 {
     const fvMesh& mesh = vMesh_.mesh();
     const polyBoundaryMesh& patches = mesh.boundaryMesh();

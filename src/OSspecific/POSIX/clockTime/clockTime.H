@@ -38,6 +38,10 @@ SourceFiles
 
 #include <sys/types.h>
 
+#ifdef DARWIN
+#include <sys/time.h>
+#endif
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam

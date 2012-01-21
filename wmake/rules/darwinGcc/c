@@ -1,0 +1,18 @@
+.SUFFIXES: .c .h
+
+cWARN        = -Wall
+
+cc          = gcc
+
+include $(RULES)/c$(WM_COMPILE_OPTION)
+
+mac-OSX-10 = -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.6
+
+cFLAGS      = $(GFLAGS) $(mac-OSX-10) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS) -fPIC
+
+ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $$SOURCE -o $@
+
+LINK_LIBS   = $(cDBUG)
+
+LINKLIBSO   = $(CC) $(cFLAGS) -dynamiclib -flat_namespace -undefined suppress
+LINKEXE     = $(CC) $(cFLAGS) -flat_namespace -undefined suppress

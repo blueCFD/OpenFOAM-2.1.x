@@ -29,6 +29,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+// Symbol to force loading at runtime
+extern "C"
+void incompressibleRASModelsLoad()
+{}
+
+
 namespace Foam
 {
 namespace incompressible

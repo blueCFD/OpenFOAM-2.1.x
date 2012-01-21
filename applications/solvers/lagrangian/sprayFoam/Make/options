@@ -28,10 +28,10 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools \
     -lcompressibleTurbulenceModel \
-    -lcompressibleRASModels \
-    -lcompressibleLESModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
+    -lcompressibleLESModels -u compressibleLESModelsLoad \
     -llagrangian \
-    -llagrangianIntermediate \
+    -llagrangianIntermediate -u lagrangianIntermediateLoad \
     -llagrangianSpray \
     -lspecie \
     -lbasicThermophysicalModels \

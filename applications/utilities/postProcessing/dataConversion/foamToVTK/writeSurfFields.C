@@ -47,7 +47,10 @@ void writeSurfFields
 {
     const fvMesh& mesh = vMesh.mesh();
 
-    std::ofstream str(fileName.c_str());
+    // Use binary mode in case we write binary.
+    // Causes windows reading to fail if we don't
+    std::ofstream str(fileName.c_str(), 
+		      ios_base::out|ios_base::binary);
 
     writeFuns::writeHeader
     (

@@ -1,0 +1,9 @@
+derivedFields.C
+derivedFieldsFunctionObject.C
+derivedFieldWriter.C
+machWriter.C
+vorticityWriter.C
+wallShearStressWriter.C
+yPlusWriter.C
+
+LIB = $(FOAM_LIBBIN)/libderivedFields

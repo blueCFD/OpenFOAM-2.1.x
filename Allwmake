@@ -18,7 +18,8 @@ wmakeCheckPwd "$WM_PROJECT_DIR" || {
 ( cd wmake/src && make )
 
 # build ThirdParty sources
-if [ -d "$WM_THIRD_PARTY_DIR" ]
+#if [ -d "$WM_THIRD_PARTY_DIR" ]
+if [ 1 -eq 0 ]
 then
     $WM_THIRD_PARTY_DIR/Allwmake
 else

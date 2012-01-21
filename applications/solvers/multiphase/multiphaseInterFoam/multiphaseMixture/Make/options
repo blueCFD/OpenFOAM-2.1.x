@@ -6,6 +6,6 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 
 LIB_LIBS = \
-    -linterfaceProperties \
+    -linterfaceProperties -u interfacePropertiesLoad \
     -lincompressibleTransportModels \
     -lfiniteVolume

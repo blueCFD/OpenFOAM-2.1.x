@@ -3,5 +3,6 @@ EXE_INC = \
     -I../phaseModel/lnInclude
 
 LIB_LIBS = \
-    -lcompressiblePhaseModel
+    -lcompressiblePhaseModel \
+    -lfiniteVolume
 

@@ -94,7 +94,6 @@ class interfaceProperties
 
 
 public:
-
     //- Conversion factor for degrees into radians
     static const scalar convertToRad;
 

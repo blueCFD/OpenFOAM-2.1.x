@@ -27,4 +27,5 @@ LIB_LIBS = \
     -lcompressibleRASModels \
     -lcompressibleLESModels \
     -lLESdeltas \
-    -lregionModels
+    -lregionModels \
+    -lbasicSolidThermo

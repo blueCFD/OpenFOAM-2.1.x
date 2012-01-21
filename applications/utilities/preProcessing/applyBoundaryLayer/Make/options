@@ -8,7 +8,8 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lfiniteVolume \
-    -lincompressibleRASModels \
+    -lincompressibleRASModels -u incompressibleRASModelsLoad \
     -lincompressibleTransportModels \
-    -lgenericPatchFields \
-    -lmeshTools
+    -lgenericPatchFields -u genericPatchFieldsLoad \
+    -lmeshTools \
+    -lincompressibleTurbulenceModel

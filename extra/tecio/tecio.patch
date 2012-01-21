@@ -1,0 +1,109 @@
+diff -rupN tecio//tecsrc/Make/files /home/rjs/projects/of/of2.0/ThirdParty-2.0.x/tecio/tecsrc/Make/files
+--- tecio//tecsrc/Make/files	1969-12-31 19:00:00.000000000 -0500
++++ /home/rjs/projects/of/of2.0/ThirdParty-2.0.x/tecio/tecsrc/Make/files	2011-08-26 20:19:28.374779001 -0400
+@@ -0,0 +1,21 @@
++alloc.cpp
++arrlist.cpp
++auxdata.cpp
++dataio4.cpp
++dataio.cpp
++dataset0.cpp
++dataset.cpp
++datautil.cpp
++filestream.cpp
++geom2.cpp
++q_msg.cpp
++q_unicode.cpp
++set.cpp
++strlist.cpp
++strutil.cpp
++tassert.cpp
++tecxxx.cpp
++TranslatedString.cpp
++
++LIB = $(FOAM_LIBBIN)/libtecio
++
+diff -rupN tecio//tecsrc/Make/options /home/rjs/projects/of/of2.0/ThirdParty-2.0.x/tecio/tecsrc/Make/options
+--- tecio//tecsrc/Make/options	1969-12-31 19:00:00.000000000 -0500
++++ /home/rjs/projects/of/of2.0/ThirdParty-2.0.x/tecio/tecsrc/Make/options	2011-08-26 20:22:29.294778995 -0400
+@@ -0,0 +1,31 @@
++#if defined(MSWIN)
++
++    TECIO_FLAGS = -DMAKEARCHIVE -DMSWIN -DUSEENUM -DTHREED -DNO_ASSERTS
++
++#elif defined(DARWIN)
++
++    TECIO_FLAGS = -DMAKEARCHIVE -DLINUX -DLINUX64 -DUSEENUM -DTHREED -U_WIN32
++
++#elif defined(linux64)
++
++    TECIO_FLAGS = -DMAKEARCHIVE -DLINUX -DLINUX64 -DUSEENUM -DTHREED -U_WIN32
++
++#elif defined(linux)
++
++    TECIO_FLAGS = -DMAKEARCHIVE -DLINUX -DUSEENUM -DTHREED -U_WIN32
++
++#else
++
++#   error architecture not supported for compiling tecio.
++
++#endif
++
++TECIO_INC =
++TECIO_LIBS =
++
++EXE_INC = \
++    $(TECIO_FLAGS)
++
++LIB_LIBS =
++
++PROJECT_LIBS=
+diff -rupN tecio//tecsrc/MASTER.h /home/rjs/projects/of/of2.0/ThirdParty-2.0.x/tecio/tecsrc/MASTER.h
+--- tecio//tecsrc/MASTER.h	2009-11-25 12:42:22.000000000 -0500
++++ /home/rjs/projects/of/of2.0/ThirdParty-2.0.x/tecio/tecsrc/MASTER.h	2011-08-26 20:42:34.274778998 -0400
+@@ -221,7 +221,7 @@
+ #include "stdafx.h"
+ 
+ #if defined MSWIN
+-#include "W__BASE.h"
++/*#include "W__BASE.h"*/
+ #endif
+ 
+ #include <string>
+@@ -524,7 +524,8 @@
+ #    if XmVERSION == 1 && XmREVISION == 0
+ #    endif
+ #  else
+-#    include <X11/Intrinsic.h>
++/*#    include <X11/Intrinsic.h>*/
++typedef void *Widget;
+ #  endif
+ #endif
+ 
+diff -rupN tecio//tecsrc/TECXXX.h /home/rjs/projects/of/of2.0/ThirdParty-2.0.x/tecio/tecsrc/TECXXX.h
+--- tecio//tecsrc/TECXXX.h	2011-06-21 11:53:24.000000000 -0400
++++ /home/rjs/projects/of/of2.0/ThirdParty-2.0.x/tecio/tecsrc/TECXXX.h	2011-08-26 20:27:02.514779002 -0400
+@@ -154,17 +154,14 @@
+ #endif /* DLLIMPORT */
+ 
+ 
+-#if defined (TECPLOTKERNEL)
+-# define LIBCALL
+-# define LIBFUNCTION
+-#elif defined (MAKEARCHIVE)
+-# define LIBCALL STDCALL
+-# define LIBFUNCTION EXTERNC DLLEXPORT
+-#else /* !TECPLOTKERNAL && !MAKEARCHIVE */
+-# define LIBCALL STDCALL
+-# define LIBFUNCTION EXTERNC DLLIMPORT
++#if defined (TECPLOTKERNEL)
++/* CORE SOURCE CODE REMOVED */
++#else /* !TECPLOTKERNAL && !MAKEARCHIVE */
++# define LIBCALL
++# define LIBFUNCTION EXTERNC
+ #endif
+ 
++
+ /*
+  *  V11.3 tecio functions
+  */

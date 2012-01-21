@@ -65,7 +65,7 @@ echo "Removing *.dep files"
 find . -name '*.dep' -exec rm {} \;
 
 echo "Cleaning Make subdirectories"
-find . -depth \( -name Make -o -name "Make.[A-Za-z]*" \) -type d -print | \
+find . -depth \( -name Make -o -name "Make.[A-Za-z]*" -o -name '.svn' \) -type d -print | \
     xargs -i find '{}' -mindepth 1 -maxdepth 1 -type d -print | \
     xargs rm -rf
 

@@ -16,16 +16,46 @@ wmakeCheckPwd "$WM_PROJECT_DIR/src" || {
 }
 
 set -x
+set -e
 
 # update OpenFOAM version strings if required
 wmakePrintBuild -check || /bin/rm -f OpenFOAM/Make/*/global.? 2>/dev/null
 
 wmakeLnInclude OpenFOAM
 wmakeLnInclude OSspecific/${WM_OSTYPE:-POSIX}
-Pstream/Allwmake $*
 
 OSspecific/${WM_OSTYPE:-POSIX}/Allwmake
+
+case $WM_COMPILER in
+*mingw* )
+    MINGW=TRUE
+
+    # Cyclic dependency with libOpenFOAM.dll, so link
+    # with objects on first pass
+    wmake libo Pstream/dummy
+    ;;
+* )
+    Pstream/Allwmake $*
+    ;;
+esac
+
 wmake $makeType OpenFOAM
+
+if [ "TRUE" = "$MINGW" ]; then
+    # Can now link against libOpenFOAM.dll
+    Pstream/Allwmake $*
+
+    # Force relink of libOpenFOAM.dll against libPstream.dll
+    touch OpenFOAM/global/global.Cver
+    export LINK_PLIB=TRUE
+    wmake $makeType OpenFOAM
+
+    # mingw excludes default compiler path so 
+    # missing /usr/include/FlexLexer.h for flex
+    cp /usr/include/FlexLexer.h "$FOAM_SRC/OpenFOAM/lnInclude/."
+fi
+
+gpu/Allwmake $*
 
 wmake $makeType fileFormats
 wmake $makeType triSurface
@@ -35,16 +65,21 @@ wmake $makeType surfMesh
 
 # Decomposition methods needed by dummyThirdParty
 parallel/decompose/AllwmakeLnInclude
+
+if [ "TRUE" != "$MINGW" ]; then
+# Cyclic dependencies with decompositionMethods, so don't try building for MINGW
 # dummyThirdParty (dummy metisDecomp, scotchDecomp etc) needed by e.g. meshTools
 dummyThirdParty/Allwmake $*
+fi
 
 wmake $makeType finiteVolume
 wmake $makeType lagrangian/basic
-wmake $makeType lagrangian/distributionModels
-wmake $makeType genericPatchFields
 
 # Build the proper scotchDecomp, metisDecomp etc.
 parallel/Allwmake $*
+
+wmake $makeType lagrangian/distributionModels
+wmake $makeType genericPatchFields
 
 wmake $makeType conversion
 
@@ -60,8 +95,14 @@ wmake $makeType randomProcesses
 thermophysicalModels/Allwmake $*
 transportModels/Allwmake $*
 turbulenceModels/Allwmake $*
-wmake $makeType combustionModels
+
+# Depends on RAS/turbulenceModels/compressible
+# hence not in thermophysicalModels
+wmake $makeType thermophysicalModels/chemistryModel
+wmake $makeType thermophysicalModels/solidChemistryModel
 regionModels/Allwmake $*
+
+wmake $makeType combustionModels
 lagrangian/Allwmake $*
 postProcessing/Allwmake $*
 mesh/Allwmake $*

@@ -7,9 +7,10 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 
 EXE_LIBS = \
-    -lcompressibleRASModels \
+    -lcompressibleRASModels -u compressibleRASModelsLoad \
     -lreactionThermophysicalModels \
     -lfiniteVolume \
-    -lgenericPatchFields \
+    -lgenericPatchFields -u genericPatchFieldsLoad \
     -lspecie \
-    -lbasicThermophysicalModels
+    -lbasicThermophysicalModels \
+    -lcompressibleTurbulenceModel

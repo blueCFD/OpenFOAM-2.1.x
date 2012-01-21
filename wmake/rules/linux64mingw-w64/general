@@ -1,0 +1,19 @@
+CPP        = /lib/cpp -traditional-cpp $(GFLAGS)
+LD         = x86_64-w64-mingw32-ld
+AR         = x86_64-w64-mingw32-ar
+RANLIB     = x86_64-w64-mingw32-ranlib
+
+PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_LIBBIN)/dummy -lPstream
+
+include $(GENERAL_RULES)/standard
+
+include $(RULES)/X
+include $(RULES)/c
+include $(RULES)/c++
+
+SO      = dll
+EXE_EXT = .exe
+
+# Ensure we know what OS we are compiling for
+# during MakefileFiles and MakefileOptions
+GFLAGS  += -DMSWIN -DLITTLE_ENDIAN

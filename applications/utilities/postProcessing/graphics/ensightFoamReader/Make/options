@@ -9,6 +9,6 @@ LIB_LIBS = \
     -lOpenFOAM \
     -lfiniteVolume \
     -lmeshTools \
-    -lgenericPatchFields \
+    -lgenericPatchFields -u genericPatchFieldsLoad \
     -llagrangian \
     $(PROJECT_LIBS)

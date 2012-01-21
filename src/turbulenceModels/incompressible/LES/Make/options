@@ -11,4 +11,5 @@ LIB_LIBS = \
     -lLESdeltas \
     -lLESfilters\
     -lfiniteVolume \
-    -lmeshTools
+    -lmeshTools \
+    -lincompressibleTransportModels
