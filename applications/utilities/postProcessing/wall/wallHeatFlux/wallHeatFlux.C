@@ -41,10 +41,11 @@ Description
 int main(int argc, char *argv[])
 {
     timeSelector::addOptions();
+#   include "addRegionOption.H"
     #include "setRootCase.H"
     #include "createTime.H"
     instantList timeDirs = timeSelector::select0(runTime, args);
-    #include "createMesh.H"
+    #include "createNamedMesh.H"
 
     forAll(timeDirs, timeI)
     {
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
             {
                 Info<< mesh.boundary()[patchi].name()
                     << " "
-                    << sum
+                    << gSum
                        (
                            mesh.magSf().boundaryField()[patchi]
                           *patchHeatFlux[patchi]

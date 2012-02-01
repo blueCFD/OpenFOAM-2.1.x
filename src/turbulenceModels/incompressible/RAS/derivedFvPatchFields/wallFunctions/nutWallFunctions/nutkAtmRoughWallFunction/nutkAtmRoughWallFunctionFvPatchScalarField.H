@@ -22,117 +22,86 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::temperatureThermoBaffleFvPatchScalarField
+    Foam::incompressible::RASModels::
+    nutkAtmRoughWallFunctionFvPatchScalarField
 
 Description
-    Thermal bounday applied to both sides of the thermal baffle region and
-    in the primary region.
-    The primary region creates and evolves the thermal baffle heat transfer
-    equation. The solid thermo and baffle dictionaries are located on the
-    primary region.
+    Boundary condition for turbulent (kinematic) viscosity for atmospheric
+    velocity profiles.
+    Desinged to be used togheter with atmBoundaryLayerInletVelocity.
+    It follows  U = (Ustar/K) ln((z - zGround + z0)/z0)
 
-    type                compressible::temperatureThermoBaffle;
+    where:
 
-    // Coupled BC.
-    neighbourFieldName  T;
-    K                   basicThermo;
-    KName               none;
-
-
-    // Thermo baffle model
-    thermoBaffleModel   thermoBaffle2D;
-    regionName          baffleRegion;
-    infoOutput          yes;
-    active              yes;
-    thermoBaffle2DCoeffs
-    {
-    }
-
-
-    // Solid thermo
-    thermoType constSolidThermo;
-
-    constSolidThermoCoeffs
-    {
-        //- thermo properties
-        rho rho [1 -3  0  0 0 0 0]              80;
-        Cp  Cp  [0  2 -2 -1 0 0 0]              15;
-        K   K   [1  1 -3 -1 0 0 0]              0.01;
-
-        //- radiative properties
-        kappa kappa [0 -1 0 0 0 0 0]            0;
-        sigmaS sigmaS [0 -1 0 0 0 0 0]          0;
-        emissivity  emissivity  [0 0 0 0 0 0 0] 1;
-
-        //- chemical properties
-        Hf  Hf  [0  2 -2  0 0 0 0]              0;
-    }
-
-    value               uniform 300;
+        Ustar is the frictional velocity
+        K is karman's constant
+        z0 is the surface roughness lenght
+        z is the verical coordinate
+        zGround is the minumum coordinate value in z direction.
 
 
 SourceFiles
-    temperatureThermoBaffleFvPatchScalarField.C
+    nutkAtmRoughWallFunctionFvPatchScalarField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef temperatureThermoBaffleFvPatchScalarField_H
-#define temperatureThermoBaffleFvPatchScalarField_H
+#ifndef nutkAtmRoughWallFunctionFvPatchScalarField_H
+#define nutkAtmRoughWallFunctionFvPatchScalarField_H
 
-
-#include "autoPtr.H"
-#include "regionModel.H"
-#include "thermoBaffleModel.H"
-#include "turbulentTemperatureCoupledBaffleMixedFvPatchScalarField.H"
+#include "nutkWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-
 namespace Foam
 {
-namespace compressible
+namespace incompressible
+{
+namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-        Class temperatureThermoBaffleFvPatchScalarField Declaration
+           Class nutkAtmRoughWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
-class temperatureThermoBaffleFvPatchScalarField
+class nutkAtmRoughWallFunctionFvPatchScalarField
 :
-    public turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
+    public nutkWallFunctionFvPatchScalarField
 {
-    // Private data
+protected:
 
-        //- Is the baffle owner
-        bool owner_;
+    // Protected data
 
-        //- Thermal baffle
-        autoPtr<regionModels::thermoBaffleModels::thermoBaffleModel> baffle_;
+        //- Surface roughness lenght
+        scalarField z0_;
 
-        //- Solid thermo type
-        word solidThermoType_;
+        //- Minimum corrdinate value in z direction
+        scalarField zGround_;
 
-        //- Dictionary
-        dictionary dict_;
+
+    // Protected Member Functions
+
+
+        //- Calculate the turbulence viscosity
+        virtual tmp<scalarField> calcNut() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("compressible::temperatureThermoBaffle");
+    TypeName("nutkAtmRoughWallFunction");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        temperatureThermoBaffleFvPatchScalarField
+        nutkAtmRoughWallFunctionFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        temperatureThermoBaffleFvPatchScalarField
+        nutkAtmRoughWallFunctionFvPatchScalarField
         (
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
@@ -140,29 +109,35 @@ public:
         );
 
         //- Construct by mapping given
-        //  temperatureThermoBaffleFvPatchScalarField onto a new patch
-        temperatureThermoBaffleFvPatchScalarField
+        //  nutkAtmRoughWallFunctionFvPatchScalarField
+        //  onto a new patch
+        nutkAtmRoughWallFunctionFvPatchScalarField
         (
-            const temperatureThermoBaffleFvPatchScalarField&,
+            const nutkAtmRoughWallFunctionFvPatchScalarField&,
             const fvPatch&,
             const DimensionedField<scalar, volMesh>&,
             const fvPatchFieldMapper&
         );
 
+        //- Construct as copy
+        nutkAtmRoughWallFunctionFvPatchScalarField
+        (
+            const nutkAtmRoughWallFunctionFvPatchScalarField&
+        );
 
         //- Construct and return a clone
         virtual tmp<fvPatchScalarField> clone() const
         {
             return tmp<fvPatchScalarField>
             (
-                new temperatureThermoBaffleFvPatchScalarField(*this)
+                new nutkAtmRoughWallFunctionFvPatchScalarField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        temperatureThermoBaffleFvPatchScalarField
+        nutkAtmRoughWallFunctionFvPatchScalarField
         (
-            const temperatureThermoBaffleFvPatchScalarField&,
+            const nutkAtmRoughWallFunctionFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
 
@@ -174,21 +149,26 @@ public:
         {
             return tmp<fvPatchScalarField>
             (
-                new temperatureThermoBaffleFvPatchScalarField(*this, iF)
+                new nutkAtmRoughWallFunctionFvPatchScalarField(*this, iF)
             );
         }
 
 
     // Member functions
 
+        // Acces functions
+
+            // Return z0
+            scalarField& z0()
+            {
+                return z0_;
+            }
+
 
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
             virtual void rmap
@@ -198,21 +178,20 @@ public:
             );
 
 
-        //- Update the coefficients associated with the patch field
-        virtual void updateCoeffs();
+        // I-O
 
-        //- Write
-        virtual void write(Ostream&) const;
+            //- Write
+            virtual void write(Ostream&) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace compressible
+} // End namespace RASModels
+} // End namespace incompressible
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 
 #endif
 
