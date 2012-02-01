@@ -1,7 +1,6 @@
 /*---------------------------------------------------------------------------*\
-This file was developed by:
-    Copyright            : (C) 2011 blueCAPE
-    Website              : www.bluecape.com.pt
+    Copyright            : (C) 2012 Symscape
+    Website              : www.symscape.com
 -------------------------------------------------------------------------------
 License
     This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
@@ -30,8 +29,6 @@ Description
     Signal handler for interupt defined by OptimisationSwitches::writeNowSignal
 
     Write once and continue.
-    
-    Note: Not operational for MinGW builds.
 
 SourceFiles
     sigWriteNow.C
@@ -62,7 +59,7 @@ class sigWriteNow
         static int signal_;
 
         //- Saved old signal trapping setting
-        static __p_sig_fn_t oldAction_;
+        static __p_sig_fn_t  oldAction_;
 
     // Private Member Functions
 

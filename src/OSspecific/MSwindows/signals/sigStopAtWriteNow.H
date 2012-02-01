@@ -1,7 +1,6 @@
 /*---------------------------------------------------------------------------*\
-This file was developed by:
-    Copyright            : (C) 2011 blueCAPE
-    Website              : www.bluecape.com.pt
+    Copyright            : (C) 2012 Symscape
+    Website              : www.symscape.com
 -------------------------------------------------------------------------------
 License
     This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
@@ -31,8 +30,6 @@ Description
         OptimisationSwitches::stopAtWriteNowSignal
 
     Write and stop the job.
-
-    Note: Not operational for MinGW builds.
 
 SourceFiles
     sigStopAtWriteNow.C

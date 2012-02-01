@@ -1,7 +1,6 @@
 /*---------------------------------------------------------------------------*\
-This file was developed by:
-    Copyright            : (C) 2011 blueCAPE
-    Website              : www.bluecape.com.pt
+    Copyright            : (C) 2012 Symscape
+    Website              : www.symscape.com
 -------------------------------------------------------------------------------
 License
     This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
@@ -49,6 +48,19 @@ __p_sig_fn_t Foam::sigWriteNow::oldAction_ = SIG_DFL;
 
 void Foam::sigWriteNow::sigHandler(int)
 {
+    // Reset old handling
+    const __p_sig_fn_t success = ::signal(signal_, oldAction_);
+    oldAction_ = SIG_DFL;
+    
+    if (SIG_ERR == success)
+    {
+        FatalErrorIn
+        (
+            "Foam::sigWriteNow::sigHandler(int)"
+        )   << "Cannot reset " << signal_ << " trapping"
+            << abort(FatalError);
+    }
+
     Info<< "sigWriteNow :"
         << " setting up write at end of the next iteration" << nl << endl;
     runTimePtr_->writeOnce();
@@ -66,23 +78,28 @@ Foam::sigWriteNow::sigWriteNow()
 
 Foam::sigWriteNow::sigWriteNow(const bool verbose, Time& runTime)
 {
-    signal_ = 0;
-
-    if (verbose)
+    if (signal_ >= 0)
     {
-        WarningIn("Foam::sigWriteNow::sigWriteNow(verbose,runTime)")
-          << "Not implemented."
-          << endl;
-    }
+        // Store runTime
+        runTimePtr_ = &runTime;
 
-    // Store runTime
-    runTimePtr_ = &runTime;
+	oldAction_ = ::signal(signal_, &Foam::sigWriteNow::sigHandler);        
 
-    if (verbose)
-    {
-        Info<< "sigWriteNow :"
-            << " Enabling writing upon (dummy) signal " << signal_
-            << endl;
+	if (SIG_ERR == oldAction_)
+	{
+            FatalErrorIn
+            (
+                "Foam::sigWriteNow::sigWriteNow(const bool, const Time&)"
+            )   << "Cannot set " << signal_ << " trapping"
+                << abort(FatalError);
+        }
+
+        if (verbose)
+        {
+            Info<< "sigWriteNow :"
+                << " Enabling writing upon signal " << signal_
+                << endl;
+        }
     }
 }
 
@@ -91,6 +108,21 @@ Foam::sigWriteNow::sigWriteNow(const bool verbose, Time& runTime)
 
 Foam::sigWriteNow::~sigWriteNow()
 {
+    // Reset old handling
+    if (signal_ > 0)
+    {
+        const __p_sig_fn_t success = ::signal(signal_, oldAction_);
+	oldAction_ = SIG_DFL;
+
+	if (SIG_ERR == success)
+        {
+            FatalErrorIn
+            (
+                "Foam::sigWriteNow::~sigWriteNow()"
+            )   << "Cannot reset " << signal_ << " trapping"
+                << abort(FatalError);
+        }
+    }
 }
 
 

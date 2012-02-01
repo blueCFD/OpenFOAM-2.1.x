@@ -1,7 +1,6 @@
 /*---------------------------------------------------------------------------*\
-This file was developed by:
-    Copyright            : (C) 2011 blueCAPE
-    Website              : www.bluecape.com.pt
+    Copyright            : (C) 2012 Symscape
+    Website              : www.symscape.com
 -------------------------------------------------------------------------------
 License
     This file is part of blueCAPE's unofficial mingw patches for OpenFOAM.
@@ -49,6 +48,19 @@ __p_sig_fn_t Foam::sigStopAtWriteNow::oldAction_ = SIG_DFL;
 
 void Foam::sigStopAtWriteNow::sigHandler(int)
 {
+    // Reset old handling
+    const __p_sig_fn_t success = ::signal(signal_, oldAction_);
+    oldAction_ = SIG_DFL;
+    
+    if (SIG_ERR == success)
+    {
+        FatalErrorIn
+        (
+            "Foam::sigStopAtWriteNow::sigHandler(int)"
+        )   << "Cannot reset " << signal_ << " trapping"
+            << abort(FatalError);
+    }
+
     // Update jobInfo file
     jobInfo.signalEnd();
 
@@ -73,23 +85,44 @@ Foam::sigStopAtWriteNow::sigStopAtWriteNow
     const Time& runTime
 )
 {
-    signal_ = 0;
-
-    if (verbose)
+    if (signal_ > 0)
     {
-        WarningIn("Foam::sigStopAtWriteNow::sigStopAtWriteNow(verbose,runTime)")
-          << "Not implemented."
-          << endl;
-    }
+        // Check that the signal is different from the writeNowSignal
+        if (sigWriteNow::signal_ == signal_)
+        {
+            FatalErrorIn
+            (
+                "Foam::sigStopAtWriteNow::sigStopAtWriteNow"
+                "(const bool, const Time&)"
+            )   << "stopAtWriteNowSignal : " << signal_
+                << " cannot be the same as the writeNowSignal."
+                << " Please change this in the controlDict ("
+                << findEtcFile("controlDict", false) << ")."
+                << exit(FatalError);
+        }
 
-    // Store runTime
-    runTimePtr_ = &runTime;
 
-    if (verbose)
-    {
-        Info<< "sigStopAtWriteNow :"
-            << " Enabling writing and stopping upon (dummy) signal " << signal_
-            << endl;
+        // Store runTime
+        runTimePtr_ = &runTime;
+
+	oldAction_ = ::signal(signal_, &Foam::sigWriteNow::sigHandler);        
+
+	if (SIG_ERR == oldAction_)
+        {
+            FatalErrorIn
+            (
+                "Foam::sigStopAtWriteNow::sigStopAtWriteNow"
+                "(const bool, const Time&)"
+            )   << "Cannot set " << signal_ << " trapping"
+                << abort(FatalError);
+        }
+
+        if (verbose)
+        {
+            Info<< "sigStopAtWriteNow :"
+                << " Enabling writing and stopping upon signal " << signal_
+                << endl;
+        }
     }
 }
 
@@ -98,6 +131,21 @@ Foam::sigStopAtWriteNow::sigStopAtWriteNow
 
 Foam::sigStopAtWriteNow::~sigStopAtWriteNow()
 {
+    // Reset old handling
+    if (signal_ > 0)
+    {
+        const __p_sig_fn_t success = ::signal(signal_, oldAction_);
+	oldAction_ = SIG_DFL;
+
+	if (SIG_ERR == success)
+        {
+            FatalErrorIn
+            (
+                "Foam::sigStopAtWriteNow::~sigStopAtWriteNow()"
+            )   << "Cannot reset " << signal_ << " trapping"
+                << abort(FatalError);
+        }
+    }
 }
 
 
