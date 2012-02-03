@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,11 +40,13 @@ SourceFiles
 #define DataEntry_H
 
 #include "dictionary.H"
+#include "Field.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+class Time;
 
 template<class Type>
 class DataEntry;
@@ -133,13 +135,29 @@ public:
             const word& name() const;
 
 
+        // Manipulation
+
+            //- Convert time
+            virtual void convertTimeBase(const Time& t);
+
+
         // Evaluation
 
             //- Return value as a function of (scalar) independent variable
             virtual Type value(const scalar x) const;
 
+            //- Return value as a function of (scalar) independent variable
+            virtual tmp<Field<Type> > value(const scalarField& x) const;
+
             //- Integrate between two (scalar) values
             virtual Type integrate(const scalar x1, const scalar x2) const;
+
+            //- Integrate between two (scalar) values
+            virtual tmp<Field<Type> > integrate
+            (
+                const scalarField& x1,
+                const scalarField& x2
+            ) const;
 
 
     // I/O
