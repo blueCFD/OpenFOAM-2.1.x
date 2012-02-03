@@ -69,7 +69,8 @@ buildIt()
     fi
 
     if [ -e "$WM_PROJECT_USER_DIR/contribsExtend" ]; then
-      time wmake all $WM_PROJECT_USER_DIR/contribsExtend >> $logFile 2>&1
+      cd $WM_PROJECT_USER_DIR/contribsExtend
+      time ./Allwmake -j >> $logFile 2>&1
     fi
 
   )
