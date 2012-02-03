@@ -62,7 +62,7 @@ buildIt()
     echo "Building $WM_OPTIONS with $WM_MPLIB ..."
     time ./Allwmake -j > $logFile 2>&1 && \
     time tutorials/Allwmake -j >> $logFile 2>&1 || \
-    echo "There seems to have been problems with this build. Check the log: $logFile"
+    echo "There seems to have been some problems with this build. Check the log: $logFile"
 
     if isMinGW; then
       fixPatchExeNames >> $logFile 2>&1
@@ -70,7 +70,8 @@ buildIt()
 
     if [ -e "$WM_PROJECT_USER_DIR/contribsExtend" ]; then
       cd $WM_PROJECT_USER_DIR/contribsExtend
-      time ./Allwmake -j >> $logFile 2>&1
+      time ./Allwmake -j >> $logFile 2>&1 || \
+      echo "There seems to have been some problems with building contribsExtend. Check the log: $logFile"
     fi
 
   )
