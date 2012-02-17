@@ -156,6 +156,11 @@ unalias wmSchedON
 unalias wmSchedOFF
 unset foamPV
 
+unalias wmSC
+unalias wmMC
+unalias wmNONSTOP
+unalias wmSTOPON1st
+
 unalias src
 unalias lib
 unalias run
