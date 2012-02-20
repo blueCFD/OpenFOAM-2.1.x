@@ -46,7 +46,7 @@ fi
 # Auto unload other packages files present in the global config.d/unset
 if [ -d "$WM_PROJECT_DIR/etc/config.d/unset" ]; then
   for configdsh in "$WM_PROJECT_DIR/etc/config.d/unset"/*.sh; do
-    [ -e ${configdsh} ] && _foamSource ${configdsh}
+    [ -e ${configdsh} ] && source ${configdsh}
   done
 fi
 
