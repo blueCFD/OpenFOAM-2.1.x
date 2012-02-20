@@ -43,6 +43,15 @@ then
     foamOldDirs="$foamOldDirs $HOME/$WM_PROJECT/$USER_SITE"
 fi
 
+# Auto unload other packages files present in the global config.d/unset
+if [ -d "$WM_PROJECT_DIR/etc/config.d/unset" ]; then
+  for configdsh in "$WM_PROJECT_DIR/etc/config.d/unset"/*.sh; do
+    [ -e ${configdsh} ] && _foamSource ${configdsh}
+  done
+fi
+
+unset configdsh
+
 #------------------------------------------------------------------------------
 # unset WM_* environment variables
 
@@ -130,20 +139,12 @@ then
     cleaned=`$foamClean "$MANPATH" "$foamOldDirs"` && MANPATH="$cleaned"
 fi
 
-# Auto unload other packages files present in the global config.d/unset
-if [ -d "$WM_PROJECT_DIR/etc/config.d/unset" ]; then
-  for configdsh in "$WM_PROJECT_DIR/etc/config.d/unset"/*.sh; do
-    [ -e ${configdsh} ] && _foamSource ${configdsh}
-  done
-fi
-
 [ -n "$LD_LIBRARY_PATH" ] || unset LD_LIBRARY_PATH
 [ -n "$MANPATH" ] || unset MANPATH
 [ -n "$LD_PRELOAD" ] || unset LD_PRELOAD
 
 
 unset cleaned foamClean foamOldDirs
-unset configdsh
 
 
 #------------------------------------------------------------------------------
