@@ -4,8 +4,8 @@ allwmakeOptions='-allow-lib makeType' && . $WM_PROJECT_DIR/wmake/scripts/Allwmak
 set -x
 
 wmake $makeType incompressible
-wmake $makeType interfaceProperties
 wmake $makeType twoPhaseInterfaceProperties
+wmake $makeType interfaceProperties
 # wmake $makeType compressible
 
 # ----------------------------------------------------------------- end-of-file
