@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,29 +23,27 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "bufferedAccumulator.H"
-#include "IOstreams.H"
+#ifndef codedFixedValuePointPatchFields_H
+#define codedFixedValuePointPatchFields_H
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+#include "codedFixedValuePointPatchField.H"
+#include "fieldTypes.H"
 
-template<class Type>
-Foam::Ostream&
-Foam::operator<<(Ostream& os, const bufferedAccumulator<Type>& bA)
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
 {
 
-    os  << bA.averagesTaken_
-        << static_cast<const List< Field<Type> >&>(bA)
-        << bA.bufferOffsets();
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    // Check state of Ostream
-    os.check
-    (
-        "Foam::Ostream& Foam::operator<<(Foam::Ostream&, "
-        "const Foam::bufferedAccumulator&)"
-    );
+makePointPatchFieldTypedefs(codedFixedValue);
 
-    return os;
-}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

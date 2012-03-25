@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,57 +23,28 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#ifndef codedFixedValuePointPatchFieldsFwd_H
+#define codedFixedValuePointPatchFieldsFwd_H
+
+#include "fieldTypes.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 namespace Foam
 {
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class Type>
-inline Field<Type>& bufferedAccumulator<Type>::accumulationBuffer()
-{
-    return (*this)[nBuffers()];
-}
+template<class Type> class codedFixedValuePointPatchField;
 
-
-template<class Type>
-inline const Field<Type>& bufferedAccumulator<Type>::accumulationBuffer() const
-{
-    return (*this)[nBuffers()];
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-inline label bufferedAccumulator<Type>::averagesTaken() const
-{
-    return averagesTaken_;
-}
-
-
-template<class Type>
-inline label bufferedAccumulator<Type>::nBuffers() const
-{
-    return bufferOffsets_.size();
-}
-
-
-template<class Type>
-inline label bufferedAccumulator<Type>::bufferLength() const
-{
-    return (*this)[0].size();
-}
-
-
-template<class Type>
-inline const List<label>& bufferedAccumulator<Type>::bufferOffsets() const
-{
-    return bufferOffsets_;
-}
-
+makePatchTypeFieldTypedefs(codedFixedValue);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

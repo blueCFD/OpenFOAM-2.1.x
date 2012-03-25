@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,72 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+#include "codedFixedValuePointPatchFields.H"
+#include "pointPatchFields.H"
+#include "addToRunTimeSelectionTable.H"
 
-inline Foam::scalar Foam::reducedUnits::refLength() const
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
 {
-    return refLength_;
-}
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::reducedUnits::refTime() const
-{
-    return refTime_;
-}
+makePointPatchFields(codedFixedValue);
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::reducedUnits::refMass() const
-{
-    return refMass_;
-}
-
-
-inline Foam::scalar Foam::reducedUnits::refTemp() const
-{
-    return refTemp_;
-}
-
-
-inline Foam::scalar Foam::reducedUnits::refEnergy() const
-{
-    return refEnergy_;
-}
-
-
-inline Foam::scalar Foam::reducedUnits::refForce() const
-{
-    return refForce_;
-}
-
-
-inline Foam::scalar Foam::reducedUnits::refVelocity() const
-{
-    return refVelocity_;
-}
-
-
-inline Foam::scalar Foam::reducedUnits::refVolume() const
-{
-    return refVolume_;
-}
-
-
-inline Foam::scalar Foam::reducedUnits::refPressure() const
-{
-    return refPressure_;
-}
-
-
-inline Foam::scalar Foam::reducedUnits::refMassDensity() const
-{
-    return refMassDensity_;
-}
-
-
-inline Foam::scalar Foam::reducedUnits::refNumberDensity() const
-{
-    return refNumberDensity_;
-}
-
+} // End namespace Foam
 
 // ************************************************************************* //

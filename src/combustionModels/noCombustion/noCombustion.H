@@ -2,11 +2,10 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
-    This file is part of OpenFOAM.
 
     OpenFOAM is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by
@@ -22,124 +21,95 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::distribution
+    Foam::combustionModels::noCombustion
 
 Description
-    Accumulating histogram of values.  Specified bin resolution
-    automatic generation of bins.
 
 SourceFiles
-    distributionI.H
-    distribution.C
+    noCombustion.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef distribution_H
-#define distribution_H
-
-#include "Map.H"
-#include "Pair.H"
+#ifndef noCombustion_H
+#define noCombustion_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace combustionModels
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class distribution Declaration
+                            Class noCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-class distribution
+template<class CombThermoType>
+class noCombustion
 :
-    public Map<label>
+    public CombThermoType
 {
-    // Private data
 
-        scalar binWidth_;
+    //- Disallow copy construct
+    noCombustion(const noCombustion&);
+
+    //- Disallow default bitwise assignment
+    void operator=(const noCombustion&);
 
 
 public:
 
     //- Runtime type information
-
-        TypeName("distribution");
-
-    // Static functions
-
-        //- write to file
-
-            static void write
-            (
-                const fileName& file,
-                const List<Pair<scalar> >& pairs
-            );
+    TypeName("noCombustion");
 
 
     // Constructors
 
-        //- Construct null
-        distribution();
-
-        //- Construct from binWidth
-        distribution(const scalar binWidth);
-
-        //- Construct as copy
-        distribution(const distribution&);
+        //- Construct from components
+        noCombustion
+        (
+            const word& modelType,
+            const fvMesh& mesh
+        );
 
 
     //- Destructor
-    virtual ~distribution();
+    virtual ~noCombustion();
 
 
     // Member Functions
 
-        label totalEntries() const;
+        // Evolution
 
-        scalar approxTotalEntries() const;
+            //- Correct combustion rate
+            virtual void correct();
 
-        scalar mean() const;
+            //- Fuel consumption rate matrix.
+            virtual tmp<fvScalarMatrix> R(const volScalarField& Y) const;
 
-        scalar median();
+            //- Heat release rate calculated from fuel consumption rate matrix
+            virtual tmp<volScalarField> dQ() const;
 
-        //- Add a value to the appropriate bin of the distribution.
-        void add(const scalar valueToAdd);
+            //-  Return source for enthalpy equation [kg/m/s3]
+            virtual tmp<volScalarField> Sh() const;
 
-        void add(const label valueToAdd);
+    // I-O
 
-        void insertMissingKeys();
-
-        List<Pair<scalar> > normalised();
-
-        List<Pair<scalar> > normalisedMinusMean();
-
-        List<Pair<scalar> > normalisedShifted(scalar shiftValue);
-
-        List<Pair<scalar> > raw();
-
-
-        // Access
-
-            inline scalar binWidth() const;
-
-
-    // Member Operators
-
-        void operator=(const distribution&);
-
-
-    // IOstream Operators
-
-        friend Ostream& operator<<(Ostream&, const distribution&);
+            //- Update properties from given dictionary
+            virtual bool read();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace combustionModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "distributionI.H"
+#ifdef NoRepository
+#   include "noCombustion.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,23 +21,21 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::multiphaseFixedFluxPressureFvPatchScalarField
-
 Description
-    Foam::multiphaseFixedFluxPressureFvPatchScalarField
+    Template for use with dynamic code generation of a
+    fixedValue pointPatchField.
+
+    - without state
 
 SourceFiles
-    multiphaseFixedFluxPressureFvPatchScalarField.C
+    fixedValuePointPatchFieldTemplate.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef multiphaseFixedFluxPressureFvPatchScalarFields_H
-#define multiphaseFixedFluxPressureFvPatchScalarFields_H
+#ifndef fixedValuePointPatchTemplate${FieldType}_H
+#define fixedValuePointPatchTemplate${FieldType}_H
 
-#include "fvPatchFields.H"
-#include "fixedGradientFvPatchFields.H"
-#include "Switch.H"
+#include "fixedValuePointPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,101 +43,92 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class multiphaseFixedFluxPressureFvPatch Declaration
+                A templated FixedValuePointPatchField
 \*---------------------------------------------------------------------------*/
 
-class multiphaseFixedFluxPressureFvPatchScalarField
+class ${typeName}FixedValuePointPatch${FieldType}
 :
-    public fixedGradientFvPatchScalarField
+    public fixedValuePointPatchField<${TemplateType}>
 {
-    // Private data
-
-        //- Name of the predicted flux transporting the field
-        word phi0Name_;
-
-        //- Name of the flux transporting the field
-        word phiName_;
-
-        //- Name of the density field used to normalise the mass flux
-        //  if neccessary
-        word rhoName_;
-
-
 public:
 
+    //- Information about the SHA1 of the code itself
+    static const char* const SHA1sum;
+
     //- Runtime type information
-    TypeName("multiphaseFixedFluxPressure");
+    TypeName("${typeName}");
 
 
     // Constructors
 
         //- Construct from patch and internal field
-        multiphaseFixedFluxPressureFvPatchScalarField
+        ${typeName}FixedValuePointPatch${FieldType}
         (
-            const fvPatch&,
-            const DimensionedField<scalar, volMesh>&
+            const pointPatch&,
+            const DimensionedField<${TemplateType}, pointMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        multiphaseFixedFluxPressureFvPatchScalarField
+        ${typeName}FixedValuePointPatch${FieldType}
         (
-            const fvPatch&,
-            const DimensionedField<scalar, volMesh>&,
-            const dictionary&
+            const pointPatch&,
+            const DimensionedField<${TemplateType}, pointMesh>&,
+            const dictionary&,
+            const bool valueRequired=true
         );
 
-        //- Construct by mapping given
-        //  multiphaseFixedFluxPressureFvPatchScalarField onto a new patch
-        multiphaseFixedFluxPressureFvPatchScalarField
+        //- Construct by mapping a copy onto a new patch
+        ${typeName}FixedValuePointPatch${FieldType}
         (
-            const multiphaseFixedFluxPressureFvPatchScalarField&,
-            const fvPatch&,
-            const DimensionedField<scalar, volMesh>&,
-            const fvPatchFieldMapper&
+            const ${typeName}FixedValuePointPatch${FieldType}&,
+            const pointPatch&,
+            const DimensionedField<${TemplateType}, pointMesh>&,
+            const pointPatchFieldMapper&
         );
 
         //- Construct as copy
-        multiphaseFixedFluxPressureFvPatchScalarField
+        ${typeName}FixedValuePointPatch${FieldType}
         (
-            const multiphaseFixedFluxPressureFvPatchScalarField&
+            const ${typeName}FixedValuePointPatch${FieldType}&
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
+        virtual autoPtr< pointPatchField<${TemplateType}> > clone() const
         {
-            return tmp<fvPatchScalarField>
+            return autoPtr< pointPatchField<${TemplateType}> >
             (
-                new multiphaseFixedFluxPressureFvPatchScalarField(*this)
+                new ${typeName}FixedValuePointPatch${FieldType}(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
-        multiphaseFixedFluxPressureFvPatchScalarField
+        ${typeName}FixedValuePointPatch${FieldType}
         (
-            const multiphaseFixedFluxPressureFvPatchScalarField&,
-            const DimensionedField<scalar, volMesh>&
+            const ${typeName}FixedValuePointPatch${FieldType}&,
+            const DimensionedField<${TemplateType}, pointMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchScalarField> clone
+        virtual autoPtr< pointPatchField<${TemplateType}> > clone
         (
-            const DimensionedField<scalar, volMesh>& iF
+            const DimensionedField<${TemplateType}, pointMesh>& iF
         ) const
         {
-            return tmp<fvPatchScalarField>
+            return autoPtr< pointPatchField<${TemplateType}> >
             (
-                new multiphaseFixedFluxPressureFvPatchScalarField(*this, iF)
+                new ${typeName}FixedValuePointPatch${FieldType}(*this, iF)
             );
         }
+
+
+    //- Destructor
+    virtual ~${typeName}FixedValuePointPatch${FieldType}();
 
 
     // Member functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
-
-        //- Write
-        virtual void write(Ostream&) const;
 };
 
 

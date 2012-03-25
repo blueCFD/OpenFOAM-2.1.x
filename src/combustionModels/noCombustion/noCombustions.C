@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,49 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "correlationFunction.H"
-#include "IOstreams.H"
+#include "makeCombustionTypes.H"
 
-template<class Type>
-bool Foam::correlationFunction<Type>::writeAveraged(Ostream& os) const
+#include "psiCombustionModel.H"
+#include "rhoCombustionModel.H"
+#include "noCombustion.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
 {
-    Field<scalar> averageCF(averaged());
-
-    forAll(averageCF, v)
-    {
-        os  << v*sampleInterval()
-            << token::SPACE
-            << averageCF[v]
-            << nl;
-    }
-
-    return os.good();
-}
-
-
-template<class Type>
-Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const correlationFunction<Type>& cF
-)
+namespace combustionModels
 {
-    os  << cF.duration()
-        << nl << cF.sampleInterval()
-        << nl << cF.averagingInterval()
-        << nl << cF.sampleSteps()
-        << nl << cF.tZeroBuffers()
-        << nl << static_cast<const bufferedAccumulator<scalar>&>(cF);
-
-    // Check state of Ostream
-    os.check
+    makeCombustionTypes
     (
-        "Foam::Ostream& Foam::operator<<"
-        "(Ostream&, const correlationFunction<Type>&)"
+        noCombustion,
+        psiCombustionModel
     );
 
-    return os;
+    makeCombustionTypes
+    (
+        noCombustion,
+        rhoCombustionModel
+    );
+}
 }
 
 
-// ************************************************************************* //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
