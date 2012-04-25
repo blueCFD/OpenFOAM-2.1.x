@@ -3,6 +3,8 @@ cd ${0%/*} || exit 1    # run from this directory
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeArguments
 set -x
 
+onWin && { echo "Default: don't build plugins for ParaView on Windows." ; exit 0 }
+
 if [ -d "$ParaView_DIR" -a -r "$ParaView_DIR" ]
 then
     [ -n "$PV_PLUGIN_PATH" ] || {
