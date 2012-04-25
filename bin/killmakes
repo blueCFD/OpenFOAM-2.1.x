@@ -31,6 +31,6 @@
 echo "Will kill all running make's..."
 ps | grep make | sed 's=^I==' | awk '{ print $1 }' | while read maketokill; do
   echo "Killing $maketokill ..."
-  kill $maketokill && echo killed || echo not killed
+  kill -9 $maketokill
 done
 echo "... all killed."
