@@ -10,14 +10,8 @@ sinclude $(RULES)/mplib$(WM_MPLIB)
 EXE_INC = -I$(OBJECTS_DIR) \
     $(PFLAGS) $(PINC)
 
-ifeq ("$(WM_PSTREAMLINK)","LINKTOPSTREAM")
-  LIB_LIBS = -L$(FOAM_LIBBIN)/$(FOAM_MPI)/ -lPstream
-else
-  LIB_LIBS = $(FOAM_LIBBIN)/$(FOAM_MPI)/libPstream.o
-endif
-
-LIB_LIBS += \
-           $(FOAM_LIBBIN)/libOSspecific.o \
+LIB_LIBS = $(FOAM_LIBBIN)/libOSspecific.o \
+           -L$(FOAM_LIBBIN)/$(FOAM_MPI)/ -lPstream \
            -lz \
            -lregex \
            -lstack_trace \
