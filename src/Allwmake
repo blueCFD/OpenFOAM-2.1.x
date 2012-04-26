@@ -24,29 +24,33 @@ wmakeLnInclude OpenFOAM
 wmakeLnInclude OSspecific/${WM_OSTYPE:-POSIX}
 wmakeVersionTag #generate version tag, after OpenFOAM/lnInclude has been created
 
+#Cyclic dependencies have to be dealt with on MinGW
+if isMinGW; then
+  #1st build all Pstream libraries in static mode
+  Pstream/Allwmake lib
+
+  #build OSspecific
+  OSspecific/${WM_OSTYPE:-POSIX}/Allwmake
+
+  #Build OpenFOAM in static mode
+  rm -f $FOAM_LIBBIN/libOpenFOAM.*
+  wmake lib OpenFOAM
+
+  Pstream/Allwmake $OriginalOptions
+  wmake $makeType OpenFOAM
+
+  # mingw excludes default compiler path so copy
+  # missing /usr/include/FlexLexer.h for flex
+  cp /usr/include/FlexLexer.h "$FOAM_SRC/OpenFOAM/lnInclude/"
+
+else
+
 Pstream/Allwmake $OriginalOptions
 
 OSspecific/${WM_OSTYPE:-POSIX}/Allwmake
 wmake $makeType OpenFOAM
 
-#in case direct linking isn't to be used, then setup settings for using Pstream library
-if isMinGW; then
-  export WM_PSTREAMLINK="LINKTOPSTREAM"
-
-  #build all Pstream libraries
-  (cd Pstream && ./Allwmake)
-
-  rm -f $FOAM_LIBBIN/libOpenFOAM.*
-
-  wmake $makeType OpenFOAM
-
-  unset WM_PSTREAMLINK
-
-  # mingw excludes default compiler path so copy
-  # missing /usr/include/FlexLexer.h for flex
-  cp /usr/include/FlexLexer.h "$FOAM_SRC/OpenFOAM/lnInclude/"
 fi
-
 
 wmake $makeType fileFormats
 wmake $makeType triSurface
