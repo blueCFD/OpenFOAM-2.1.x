@@ -15,9 +15,9 @@ wmakeMpiLib()
     (
         export WM_OPTIONS_LOCAL="$WM_OPTIONS$WM_MPLIB"
         whichmpi="$libName/Make/$WM_OPTIONS_LOCAL/using:$FOAM_MPI"
-        [ -e "$whichmpi" ] || wclean $libName
-        echo "wmake $buildMode $libName"
-        wmake $buildMode $libName
+        [ -e "$whichmpi" ] || wclean $makeType $libName
+        echo "wmake $makeType $libName"
+        wmake $makeType $libName
         touch "$whichmpi"
     )
     done
