@@ -108,8 +108,11 @@ processFolder()
   #remove leading spaces
   LIBSMUSTLOAD=`echo $LIBSMUSTLOAD | sed -e 's=^[ ]*==g'`
 
+  #convert spaces to commas
+  LIBSMUSTLOAD=`echo $LIBSMUSTLOAD | sed -e 's=\ =,=g'`
+
   #now if there is anything to still link to  
-  if [ `echo $LIBSMUSTLOAD | sed 's=\ =\n=g' | wc -l` -gt 0 -a "x" != "x$LIBSMUSTLOAD" ]; then
+  if [ `echo $LIBSMUSTLOAD | sed 's=,=\n=g' | wc -l` -gt 0 -a "x" != "x$LIBSMUSTLOAD" ]; then
     echo 'EXE_INC += -DLIBS_TO_LOAD="\"'$LIBSMUSTLOAD'\""' >> $opFile
     dependenciesClosed=`expr $dependenciesClosed + 1`
     
