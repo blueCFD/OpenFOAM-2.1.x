@@ -5,12 +5,26 @@ set -x
 
 wmake $makeType incompressible
 if onWin; then
+
+#First build them in static form
+wmake lib twoPhaseInterfaceProperties
+wmake lib interfaceProperties
+
+#Then build libtwoPhaseInterfaceProperties in dynamic
+rm $FOAM_LIBBIN/libtwoPhaseInterfaceProperties.*
 wmake $makeType twoPhaseInterfaceProperties
+
+#Then build libinterfaceProperties in dynamic
+rm $FOAM_LIBBIN/libinterfaceProperties.*
 wmake $makeType interfaceProperties
+
 else
+
 wmake $makeType interfaceProperties
 wmake $makeType twoPhaseInterfaceProperties
+
 fi
+
 # wmake $makeType compressible
 
 # ----------------------------------------------------------------- end-of-file
