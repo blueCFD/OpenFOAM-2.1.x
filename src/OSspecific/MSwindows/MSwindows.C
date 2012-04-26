@@ -1265,13 +1265,13 @@ void* dlOpen(const fileName& libName, const bool check)
 {
     //Lets check if this is a list of libraries to be loaded
     //NOTE: should only be used for "force loading libraries"
-    if (libName.find_first_of(' ')!=Foam::string::npos)
+    if (libName.find_first_of(',')!=Foam::string::npos)
     {
       void *moduleh=NULL;
       string libsToLoad=libName;
-      libsToLoad.removeRepeated(' ');
       libsToLoad.removeTrailing(' '); //removes spaces from both ends
-      libsToLoad += ' ';
+      libsToLoad.removeRepeated(',');
+      libsToLoad += ',';
 
       if (MSwindows::debug)
       {
@@ -1279,12 +1279,12 @@ void* dlOpen(const fileName& libName, const bool check)
       }
 
       //generate the word list
-      size_t stposstr=0, found=libsToLoad.find_first_of(' ');
+      size_t stposstr=0, found=libsToLoad.find_first_of(',');
       while (found!=string::npos)
       {
           string libToLoad = libsToLoad.substr(stposstr,found-stposstr);
           moduleh = dlOpen(libToLoad); //FIX: module handle is ignored and maybe it shouldn't
-          stposstr=found+1; found=libsToLoad.find_first_of(' ',stposstr);
+          stposstr=found+1; found=libsToLoad.find_first_of(',',stposstr);
       }
 
       return moduleh;
