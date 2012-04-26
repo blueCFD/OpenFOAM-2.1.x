@@ -85,8 +85,7 @@ processFolder()
   fi
 
   #now retrieve the list of libraries the executable is linked to
-  WM_OBJDUMP=`echo $WM_CC | sed s/gcc/objdump/`
-  librariesLinkedTo=`$WM_OBJDUMP -x $exeName | grep dll | grep lib | sort -u | sed -e 's=.*DLL Name: lib==' -e 's=\.dll$=='`
+  librariesLinkedTo=`${WM_COMPILER_ARCH}-objdump -x $exeName | grep dll | grep lib | sort -u | sed -e 's=.*DLL Name: lib==' -e 's=\.dll$=='`
 
   #now retrieve the libraries that it should link to (and change spaces to lines)
   EXE_LIBS=`grep -e "EXE_LIBS.*=" $opFile | sed 's=EXE\_LIBS.*\=[ ]*=='`

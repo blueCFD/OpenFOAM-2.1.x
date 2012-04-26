@@ -1,5 +1,7 @@
 CPP        = cpp -traditional-cpp $(GFLAGS)
 LD         = $(WM_COMPILER_ARCH)-ld
+RANLIB     = $(WM_COMPILER_ARCH)-ranlib
+AR         = $(WM_COMPILER_ARCH)-ar
 
 PROJECT_LIBS = -l$(WM_PROJECT) -L$(FOAM_LIBBIN)/$(FOAM_MPI) -lPstream
 

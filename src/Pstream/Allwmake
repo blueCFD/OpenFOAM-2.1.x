@@ -10,6 +10,7 @@ allwmakeOptions='-allow-lib makeType' && . $WM_PROJECT_DIR/wmake/scripts/Allwmak
 wmakeMpiLib()
 {
     set +x
+    export makeType
     for libName
     do
     (

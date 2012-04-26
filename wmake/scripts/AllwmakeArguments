@@ -94,7 +94,7 @@ usage_dev() {
 
 Options to be used only within Allwmake scripts via "allwmakeOptions":
   -allow-doc docvarname      if "doc" is picked up later on during parsing, then "docvarname" will be set to 1.
-  -allow-lib libvarname      if "liba", "libo" or "libso" are detected during parsing, "libvarname" will be assigned that value.
+  -allow-lib libvarname      if "lib", "libo" or "libso" are detected during parsing, "libvarname" will be assigned that value.
   -allow-inotify varname     if "USE_STAT" is detected, it will assigned to "varname".
   -allow-readline varname    if "NO_READLINE" is detected, it will assigned to "varname".
 
