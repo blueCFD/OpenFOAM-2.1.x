@@ -27,7 +27,17 @@ wmakeMpiLib()
 
 set -x
 
-wmake $makeType dummy
+buildMode=$makeType
+
+if isMinGW; then
+  if [ "$WM_PSTREAMLINK" = "LINKTOPSTREAM" ]; then
+    buildMode=$makeType
+  else
+    buildMode="libo"
+  fi
+fi
+
+wmake $buildMode dummy
 
 case "$WM_MPLIB" in
 *MPI*)
