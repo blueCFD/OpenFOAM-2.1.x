@@ -1,0 +1,60 @@
+#                            -*- mode: org; -*-
+#
+#+TITLE:             blueCFD README for version 2.1-2
+#+AUTHOR:                      blueCAPE Lda
+#+DATE:                       1st July 2012
+#+LINK:             http://www.bluecape.com.pt/blueCFD
+#+OPTIONS: author:nil ^:{}
+# Copyright (c) 2012 blueCAPE Lda.
+
+* About blueCFD
+  
+
+* Copyright
+  blueCFD is a service package provided by blueCAPE Lda, of a high quality
+  cross-compiled build version of OpenFOAM® for up-to-date Windows XP, Vista
+  and Seven, both 32 and 64bit, with some additional tweaks, executables and 
+  scripts, in order to maintain usability under a Windows environment.
+
+  OpenFOAM is free software: you can redistribute it and/or modify it under the
+  terms of the GNU General Public License as published by the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later
+  version.  See the file =COPYING= in this directory or
+  [[http://www.gnu.org/licenses/]], for a description of the GNU General Public
+  License terms under which you can copy the files.
+
+* Information
+  This source code is a patched version of the original OpenFOAM source code.
+  The modifications made are being tracked at the blueCFD-SingleCore project:
+      [[http://code.google.com/p/bluecfd-singlecore/]]
+
+  The modifications made in blueCFD are based on Symscape's modifications to
+  the OpenFOAM source code, which are provided at:
+      [[http://www.symscape.com/openfoam-2-1-x-on-windows-64-mpi]]
+
+  The differences between the two can be tracked by checking the dedicated
+  respective git branches at the blueCFD-SingleCore project:
+    + [[http://code.google.com/p/bluecfd-singlecore/source/list?repo=openfoam21x&name=blueCFD-2.1-2]]
+    + [[http://code.google.com/p/bluecfd-singlecore/source/list?repo=openfoam21x&name=symscape_2.1.x_v1]]
+
+* Disclaimer
+  blueCAPE Lda is responsible for blueCFD and this version of cross-compiled
+  OpenFOAM®. blueCAPE Lda is in no way associated with SGI Corp, nor holds
+  any copyrights over OpenFOAM®. This offering is not approved or endorsed
+  by SGI Corp, the producer of the OpenFOAM software and owner of the OPENFOAM®
+  and OpenCFD® trade marks.
+
+* Download and installation instructions
+  [[http://code.google.com/p/bluecfd-singlecore/wiki/WikiLobby?tm=6]]
+
+* Release notes
+  [[http://joomla.bluecape.com.pt/files/news/blueCFD-ReleaseNotes-2.1.pdf]]
+
+* Documentation
+  [[http://code.google.com/p/bluecfd-singlecore/wiki/WikiLobby?tm=6]]
+
+* Support and development contracts related to blueCFD
+  [[http://joomla.bluecape.com.pt/index.php?option=com_contact]]
+
+* Reporting Bugs in blueCFD
+  [[http://code.google.com/p/bluecfd-singlecore/wiki/IssueTracker?tm=3]]
