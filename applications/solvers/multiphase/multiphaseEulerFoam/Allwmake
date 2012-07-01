@@ -6,7 +6,6 @@ set -x
 wmake libso phaseModel
 wmake libso interfacialModels
 wmake libso multiphaseSystem
-wmake libso kineticTheoryModels
 wmake
 
 # ----------------------------------------------------------------- end-of-file
