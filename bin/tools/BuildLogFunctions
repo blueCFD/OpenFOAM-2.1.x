@@ -32,9 +32,12 @@
 BuildLogSetup()
 {
   localTimeStamp=$(date +%Y-%m-%d_%H-%M)
-  export BUILD_LOG_FOLDER="../buildLogs/$localTimeStamp"
+  export BUILD_LOG_FOLDER="${PWD%/*}/buildLogs/$localTimeStamp"
   mkdir -p "$BUILD_LOG_FOLDER"
   unset localTimeStamp
 }
+
+#call the function above...
+BuildLogSetup
 
 #------------------------------------------------------------------------------

@@ -48,16 +48,11 @@ USAGE
 #argument: bashrc file name
 buildIt()
 {
-  #make sure our logging folder is up and running
-  if [ ! -d "../buildLogs" ]; then
-    mkdir -p ../buildLogs
-  fi
-
   (
     . etc/bashrc $*
 
     timeStamp=$(date +%Y-%m-%d_%H-%M)
-    logFile="../buildLogs/Allwmake_${WM_OPTIONS}_${timeStamp}.log"
+    logFile="$BUILD_LOG_FOLDER/Allwmake_${WM_OPTIONS}_${timeStamp}.log"
 
     echo "Building $WM_OPTIONS with $WM_MPLIB ..."
     time ./Allwmake -j > $logFile 2>&1 && \
@@ -72,7 +67,6 @@ buildIt()
       time $WM_PROJECT_USER_DIR/contribsExtend/Allwmake -j >> $logFile 2>&1 || \
       echo "There seems to have been some problems with building contribsExtend. Check the log: $logFile"
     fi
-
   )
 }
 
@@ -85,6 +79,9 @@ elif [ "x$1" = "x--help" -o $# -gt 0 -o "x$WM_PROJECT_DIR" != "x" ]
 then
     usage
 fi
+
+#Source buildLogs helper stuff
+. ./bin/tools/BuildLogFunctions
 
 if [ "x$1" != "x--sourceonly" ]
 then
