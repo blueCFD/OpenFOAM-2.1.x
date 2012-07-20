@@ -3,6 +3,7 @@ cd ${0%/*} || exit 1    # run from this directory
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeArguments
 set -x
 
+wmake libso phaseEquationsOfState
 wmake
 wmake compressibleInterDyMFoam
 
