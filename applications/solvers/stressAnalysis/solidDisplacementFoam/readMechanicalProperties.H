@@ -75,10 +75,7 @@
 
     autoPtr<volScalarField> EPtr;
 
-#ifdef EIO
-#undef EIO
-#endif
-    IOobject EIO
+    IOobject EHeader
     (
         "E",
         runTime.timeName(0),
@@ -95,7 +92,7 @@
         (
             new volScalarField
             (
-                EIO,
+                EHeader,
                 mesh,
                 dimensionedScalar
                 (
@@ -109,13 +106,13 @@
     }
     else if (EType == "field")
     {
-        EIO.readOpt() = IOobject::MUST_READ;
+        EHeader.readOpt() = IOobject::MUST_READ;
 
         EPtr.reset
         (
             new volScalarField
             (
-                EIO,
+                EHeader,
                 mesh
             )
         );
@@ -192,9 +189,9 @@
 
     Info<< "Calculating Lame's coefficients\n" << endl;
 
-    volScalarField mu = E/(2.0*(1.0 + nu));
-    volScalarField lambda = nu*E/((1.0 + nu)*(1.0 - 2.0*nu));
-    volScalarField threeK = E/(1.0 - 2.0*nu);
+    volScalarField mu(E/(2.0*(1.0 + nu)));
+    volScalarField lambda(nu*E/((1.0 + nu)*(1.0 - 2.0*nu)));
+    volScalarField threeK(E/(1.0 - 2.0*nu));
 
     Switch planeStress(mechanicalProperties.lookup("planeStress"));
 
