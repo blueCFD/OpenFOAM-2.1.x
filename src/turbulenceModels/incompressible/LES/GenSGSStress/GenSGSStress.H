@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,14 +104,43 @@ public:
         //- Return the SGS turbulent kinetic energy.
         virtual tmp<volScalarField> k() const
         {
-            return 0.5*tr(B_);
+            return tmp<volScalarField>
+            (
+                new volScalarField
+                (
+                    IOobject
+                    (   
+                        "k",
+                        runTime_.timeName(),
+                        mesh_,
+                        IOobject::NO_READ,
+                        IOobject::NO_WRITE
+                    ),
+                    0.5*tr(B_)
+                )
+            );
         }
 
         //- Return the SGS turbulent dissipation.
         virtual tmp<volScalarField> epsilon() const
         {
             const volScalarField K(k());
-            return ce_*K*sqrt(K)/delta();
+            
+            return tmp<volScalarField>
+            (
+                new volScalarField
+                (
+                    IOobject
+                    (   
+                        "epsilon",
+                        runTime_.timeName(),
+                        mesh_,
+                        IOobject::NO_READ,
+                        IOobject::NO_WRITE
+                    ),
+                    ce_*K*sqrt(K)/delta()
+                )
+            );
         }
 
         //- Return the SGS viscosity.
@@ -128,11 +157,19 @@ public:
 
         //- Return the effective sub-grid turbulence stress tensor
         //  including the laminar stress
-        virtual tmp<volSymmTensorField> devBeff() const;
+        virtual tmp<volSymmTensorField> devReff() const;
 
-        //- Returns div(B).
-        // This is the additional term due to the filtering of the NSE.
-        virtual tmp<fvVectorMatrix> divDevBeff(volVectorField& U) const;
+        //- Return the deviatoric part of the effective sub-grid
+        //  turbulence stress tensor including the laminar stress
+        virtual tmp<fvVectorMatrix> divDevReff(volVectorField& U) const;
+
+        //- Return the deviatoric part of the effective sub-grid
+        //  turbulence stress tensor including the laminar stress
+        virtual tmp<fvVectorMatrix> divDevRhoReff
+        (
+            const volScalarField& rho,
+            volVectorField& U
+        ) const;
 
         //- Read LESProperties dictionary
         virtual bool read();
