@@ -30,7 +30,26 @@ rem ----------------------------------------------------------------------------
 
 set /A x_numprocs=0
 set MACHINEFILE=
+set PREVIOUSPATH=%CD%
 
+rem Detect if the execution folder should be changed
+set PARAMS= 
+set CASEPATH= 
+:LOOP
+  if "%1"=="" goto afterloop
+  if "%1"=="-case" set CASEPATH=%2
+  set PARAMS=%PARAMS% %1
+  shift
+  goto LOOP
+:AFTERLOOP
+
+rem go into case folder and launch application with the proper MPI setup
+cd %CASEPATH%
+call :CONTINUE %PARAMS%
+cd %PREVIOUSPATH%
+GOTO END
+
+:CONTINUE
 rem simple count
 rem for /D %%a in (processor*) do @set /A x_numprocs=x_numprocs+1
 
@@ -48,6 +67,7 @@ IF EXIST "system\machines" set MACHINEFILE=system\machines
 rem Generate temporary batch file name, which is necessary in cases with long path names
 set RNDBATCH=%TIME:~6,2%%RANDOM%.bat
 
+rem launch application with the proper MPI setup
 GOTO %WM_MPLIB%
 
 :OPENMPI
@@ -60,7 +80,7 @@ echo %1 -parallel %2 %3 %4 %5 %6 %7 %8 %9 > %RNDBATCH%
 @echo on
 mpirun -n %x_numprocs% %MPI_ACCESSORY_OPTIONS% %MACHINEFILE% -x HOME -x PATH -x USERNAME -x WM_PROJECT_DIR -x WM_PROJECT_INST_DIR -x WM_OPTIONS -x FOAM_LIBBIN -x FOAM_APPBIN -x FOAM_USER_APPBIN -x MPI_BUFFER_SIZE %RNDBATCH%
 @echo off
-GOTO end
+GOTO END
 
 
 :MPICH
@@ -72,7 +92,7 @@ echo %1 -parallel %2 %3 %4 %5 %6 %7 %8 %9 > %RNDBATCH%
 @echo on
 mpiexec -n %x_numprocs% %MPI_ACCESSORY_OPTIONS% %MACHINEFILE% -genvlist HOME,PATH,USERNAME,WM_PROJECT_DIR,WM_PROJECT_INST_DIR,WM_OPTIONS,FOAM_LIBBIN,FOAM_APPBIN,FOAM_USER_APPBIN,MPI_BUFFER_SIZE %RNDBATCH%
 @echo off
-GOTO end
+GOTO END
 
 
 :MSMPI
@@ -81,9 +101,9 @@ IF NOT "%MACHINEFILE%" == "" set MACHINEFILE=-machinefile %MACHINEFILE%
 @echo on
 mpiexec -n %x_numprocs% %MPI_ACCESSORY_OPTIONS% %MACHINEFILE% %1 -parallel %2 %3 %4 %5 %6 %7 %8 %9
 @echo off
-GOTO end
+GOTO END
 
 
-:end
+:END
 set x_numprocs=
-IF EXIST %RNDBATCH% del %RNDBATCH%
+IF EXIST "%RNDBATCH%" del %RNDBATCH%
