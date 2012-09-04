@@ -44,9 +44,14 @@ set CASEPATH=
 :AFTERLOOP
 
 rem go into case folder and launch application with the proper MPI setup
+call :GOTODRIVE %CASEPATH%
 cd %CASEPATH%
 call :CONTINUE %PARAMS%
 cd %PREVIOUSPATH%
+GOTO END
+
+:GOTODRIVE 
+%~d1
 GOTO END
 
 :CONTINUE
