@@ -28,6 +28,7 @@ Description
 
 SourceFiles
     extrudedMesh.C
+    extrudedMeshTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -114,12 +115,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-#   include "extrudedMesh.C"
-#else
-#   ifdef xlC
-#   pragma implementation("extrudedMesh.C")
-#   endif
+#   include "extrudedMeshTemplates.C"
 #endif
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #endif
 

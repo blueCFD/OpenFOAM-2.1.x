@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,8 +76,22 @@ void Foam::polyMesh::clearGeom()
     tetBasePtIsPtr_.clear();
     // Remove the cell tree
     cellTreePtr_.clear();
+}
 
-    pointMesh::Delete(*this);
+
+void Foam::polyMesh::clearAdditionalGeom()
+{
+    if (debug)
+    {
+        Info<< "void polyMesh::clearAdditionalGeom() : "
+            << "clearing additional geometric data"
+            << endl;
+    }
+
+    // Remove the stored tet base points
+    tetBasePtIsPtr_.clear();
+    // Remove the cell tree
+    cellTreePtr_.clear();
 }
 
 
@@ -109,8 +123,6 @@ void Foam::polyMesh::clearAddressing()
     tetBasePtIsPtr_.clear();
     // Remove the cell tree
     cellTreePtr_.clear();
-
-    pointMesh::Delete(*this);
 }
 
 
@@ -123,6 +135,8 @@ void Foam::polyMesh::clearPrimitives()
     owner_.setSize(0);
     neighbour_.setSize(0);
 
+    pointMesh::Delete(*this);
+
     clearedPrimitives_ = true;
 }
 
@@ -131,11 +145,20 @@ void Foam::polyMesh::clearOut()
 {
     clearGeom();
     clearAddressing();
+
+    pointMesh::Delete(*this);
 }
 
 
 void Foam::polyMesh::clearCellTree()
 {
+    if (debug)
+    {
+        Info<< "void polyMesh::clearCellTree() : "
+            << "clearing cell tree"
+            << endl;
+    }
+
     cellTreePtr_.clear();
 }
 
