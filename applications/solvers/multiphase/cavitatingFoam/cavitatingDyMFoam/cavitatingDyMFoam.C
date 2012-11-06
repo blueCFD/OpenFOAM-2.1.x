@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2012 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    twoLiquidMixingFoam
+    cavitatingFoam
 
 Description
-    Solver for mixing 2 incompressible fluids.
+    Transient cavitation code based on the homogeneous equilibrium model
+    from which the compressibility of the liquid/vapour "mixture" is obtained.
 
     Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "MULES.H"
-#include "subCycle.H"
+#include "dynamicFvMesh.H"
+#include "barotropicCompressibilityModel.H"
 #include "twoPhaseMixture.H"
 #include "turbulenceModel.H"
 #include "pimpleControl.H"
@@ -43,16 +44,21 @@ Description
 int main(int argc, char *argv[])
 {
     #include "setRootCase.H"
+
     #include "createTime.H"
-    #include "createMesh.H"
-    #include "readGravitationalAcceleration.H"
-    #include "initContinuityErrs.H"
+    #include "createDynamicFvMesh.H"
+    #include "readThermodynamicProperties.H"
+    #include "readControls.H"
     #include "createFields.H"
-    #include "readTimeControls.H"
-    #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
+    #include "initContinuityErrs.H"
 
     pimpleControl pimple(mesh);
+
+    surfaceScalarField phivAbs("phivAbs", phiv);
+    fvc::makeAbsolute(phivAbs, U);
+
+    #include "compressibleCourantNo.H"
+    #include "setInitialDeltaT.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,23 +66,42 @@ int main(int argc, char *argv[])
 
     while (runTime.run())
     {
-        #include "readTimeControls.H"
+        #include "readControls.H"
         #include "CourantNo.H"
-        #include "alphaCourantNo.H"
         #include "setDeltaT.H"
 
         runTime++;
-
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        twoPhaseProperties.correct();
+        scalar timeBeforeMeshUpdate = runTime.elapsedCpuTime();
 
-        #include "alphaEqnSubCycle.H"
-        #include "alphaDiffusionEqn.H"
+        {
+            // Calculate the relative velocity used to map relative flux phiv
+            volVectorField Urel("Urel", U);
+
+            if (mesh.moving())
+            {
+                Urel -= fvc::reconstruct(fvc::meshPhi(U));
+            }
+
+            // Do any mesh changes
+            mesh.update();
+        }
+
+        if (mesh.changing())
+        {
+            Info<< "Execution time for mesh.update() = "
+                << runTime.elapsedCpuTime() - timeBeforeMeshUpdate
+                << " s" << endl;
+
+            #include "correctPhi.H"
+        }
 
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
+            #include "rhoEqn.H"
+            #include "gammaPsi.H"
             #include "UEqn.H"
 
             // --- Pressure corrector loop
