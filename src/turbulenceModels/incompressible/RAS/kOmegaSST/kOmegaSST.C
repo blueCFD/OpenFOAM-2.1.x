@@ -69,6 +69,7 @@ tmp<volScalarField> kOmegaSST::F1(const volScalarField& CDkOmega) const
     return tanh(pow4(arg1));
 }
 
+
 tmp<volScalarField> kOmegaSST::F2() const
 {
     tmp<volScalarField> arg2 = min
@@ -94,6 +95,19 @@ tmp<volScalarField> kOmegaSST::F3() const
     );
 
     return 1 - tanh(pow4(arg3));
+}
+
+
+tmp<volScalarField> kOmegaSST::F23() const
+{
+    tmp<volScalarField> f23(F2());
+
+    if (F3_)
+    {
+        f23() *= F3();
+    }
+
+    return f23;
 }
 
 
@@ -218,6 +232,15 @@ kOmegaSST::kOmegaSST
             10.0
         )
     ),
+    F3_
+    (
+        Switch::lookupOrAddToDict
+        (
+            "F3",
+            coeffDict_,
+            false
+        )
+    ),
 
     y_(mesh_),
 
@@ -267,7 +290,7 @@ kOmegaSST::kOmegaSST
       / max
         (
             a1_*omega_,
-            b1_*F2()*F3()*sqrt(2.0)*mag(symm(fvc::grad(U_)))
+            b1_*F23()*sqrt(2.0)*mag(symm(fvc::grad(U_)))
         )
     );
     nut_.correctBoundaryConditions();
@@ -359,7 +382,9 @@ bool kOmegaSST::read()
         beta2_.readIfPresent(coeffDict());
         betaStar_.readIfPresent(coeffDict());
         a1_.readIfPresent(coeffDict());
+        b1_.readIfPresent(coeffDict());
         c1_.readIfPresent(coeffDict());
+        F3_.readIfPresent("F3", coeffDict());
 
         return true;
     }
@@ -439,7 +464,7 @@ void kOmegaSST::correct()
 
 
     // Re-calculate viscosity
-    nut_ = a1_*k_/max(a1_*omega_, b1_*F2()*F3()*sqrt(S2));
+    nut_ = a1_*k_/max(a1_*omega_, b1_*F23()*sqrt(S2));
     nut_.correctBoundaryConditions();
 }
 

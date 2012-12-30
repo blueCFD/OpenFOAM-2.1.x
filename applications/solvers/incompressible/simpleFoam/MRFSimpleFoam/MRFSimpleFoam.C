@@ -46,10 +46,8 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createMesh.H"
     #include "createFields.H"
+    #include "createMRFZones.H"
     #include "initContinuityErrs.H"
-
-    MRFZones mrfZones(mesh);
-    mrfZones.correctBoundaryVelocity(U);
 
     simpleControl simple(mesh);
 

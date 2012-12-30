@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    interMixingFoam
+    porousMRFSimpleFoam
 
 Description
-    Solver for 3 incompressible fluids, two of which are miscible,
-    using a VOF method to capture the interface.
+    Steady-state solver for incompressible, turbulent flow with
+    implicit or explicit porosity treatment and MRF regions.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "MULES.H"
-#include "subCycle.H"
-#include "threePhaseMixture.H"
-#include "threePhaseInterfaceProperties.H"
-#include "turbulenceModel.H"
-#include "pimpleControl.H"
+#include "singlePhaseTransportModel.H"
+#include "RASModel.H"
+#include "porousZones.H"
+#include "MRFZones.H"
+#include "simpleControl.H"
+#include "IObasicSourceList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,56 +45,29 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-    #include "readGravitationalAcceleration.H"
-    #include "initContinuityErrs.H"
+
+    simpleControl simple(mesh);
+
     #include "createFields.H"
-    #include "readTimeControls.H"
-    #include "CourantNo.H"
-    #include "setInitialDeltaT.H"
-
-    pimpleControl pimple(mesh);
-
-    #include "correctPhi.H"
+    #include "createPorousZones.H"
+    #include "createMRFZones.H"
+    #include "initContinuityErrs.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
 
-    while (runTime.run())
+    while (simple.loop())
     {
-        #include "readTimeControls.H"
-        #include "CourantNo.H"
-        #include "alphaCourantNo.H"
-        #include "setDeltaT.H"
-
-        runTime++;
-
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        threePhaseProperties.correct();
-
-        #include "alphaEqnsSubCycle.H"
-
-        #define twoPhaseProperties threePhaseProperties
-
-        // --- Pressure-velocity PIMPLE corrector loop
-        while (pimple.loop())
+        // Pressure-velocity SIMPLE corrector
         {
             #include "UEqn.H"
-
-            // --- Pressure corrector loop
-            while (pimple.correct())
-            {
-                #include "pEqn.H"
-            }
-
-            if (pimple.turbCorr())
-            {
-                turbulence->correct();
-            }
+            #include "pEqn.H"
         }
 
-        #include "continuityErrs.H"
+        turbulence->correct();
 
         runTime.write();
 
@@ -103,9 +76,9 @@ int main(int argc, char *argv[])
             << nl << endl;
     }
 
-    Info<< "\n end \n";
+    Info<< "End\n" << endl;
 
-    return(0);
+    return 0;
 }
 
 
