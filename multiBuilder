@@ -64,6 +64,7 @@ buildIt()
     fi
 
     if [ -e "$WM_PROJECT_USER_DIR/contribsExtend" ]; then
+      echo "... along with contribsExtend ..."
       $WM_PROJECT_USER_DIR/contribsExtend/Allwclean -j >> $logFile 2>&1
       time $WM_PROJECT_USER_DIR/contribsExtend/Allwmake -j >> $logFile 2>&1 || \
       echo "There seems to have been some problems with building contribsExtend. Check the log: $logFile"
