@@ -45,7 +45,7 @@ USAGE
     exit 1
 }
 
-#argument: bashrc file name
+#argument: bashrc options
 buildIt()
 {
   (
@@ -64,9 +64,25 @@ buildIt()
     fi
 
     if [ -e "$WM_PROJECT_USER_DIR/contribsExtend" ]; then
+      $WM_PROJECT_USER_DIR/contribsExtend/Allwclean -j >> $logFile 2>&1
       time $WM_PROJECT_USER_DIR/contribsExtend/Allwmake -j >> $logFile 2>&1 || \
       echo "There seems to have been some problems with building contribsExtend. Check the log: $logFile"
     fi
+  )
+}
+
+#argument: bashrc options
+buildDoxyDoc()
+{
+  (
+    . etc/bashrc $*
+
+    timeStamp=$(date +%Y-%m-%d_%H-%M)
+    logFile="$BUILD_LOG_FOLDER/docs_${WM_OPTIONS}_${timeStamp}.log"
+
+    echo "Building Doxygen Documentation for $WM_OPTIONS with $WM_MPLIB ..."
+    time doc/Allwmake > $logFile 2>&1 || \
+    echo "There seems to have been some problems with building the docs. Check the log: $logFile"
   )
 }
 
@@ -92,6 +108,8 @@ then
   buildIt prefs-mingw-w32.sh
   buildIt prefs-mingw-w32.sh WM_PRECISION_OPTION=SP
   buildIt prefs-mingw-w64.sh
+
+  buildDoxyDoc prefs-mingw-w64.sh
 
   # buildIt prefs-i586-mingw32msvc.sh
   # buildIt prefs-i586-mingw32msvc.sh WM_PRECISION_OPTION=SP
