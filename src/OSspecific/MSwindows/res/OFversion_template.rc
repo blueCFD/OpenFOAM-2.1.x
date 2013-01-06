@@ -1,8 +1,8 @@
 #define IDR_VERSION1 1
 
 IDR_VERSION1 VERSIONINFO
-FILEVERSION 2,1,0,0
-PRODUCTVERSION 2,1,0,0
+FILEVERSION 2,1,1,0
+PRODUCTVERSION 2,1,1,0
 FILEOS 0x00000000
 FILETYPE 0x00000000
 BEGIN
@@ -10,14 +10,11 @@ BEGIN
   BEGIN
     BLOCK "FFFF0000"
     BEGIN
-      VALUE "FileVersion", "2.1.0.0\0"
-      VALUE "ProductVersion", "2.1.0.0\0"
-      VALUE "FileDescription", "tmpintname - Part of an unofficial build of OpenFOAM: The Open Source CFD Toolbox\n\
-OpenFOAM TM 2011-12 OpenFOAM Foundation.\n\
-Unofficial Windows 32 and 64 bit porting by blueCAPE: http://www.bluecape.com.pt\n\
-Based on Windows porting (2.1.x v1) by Symscape: http://www.symscape.com\0"
-      VALUE "LegalCopyright", "OpenFOAM is Copyright (C) 2011-12 OpenFOAM Foundation.\0"
-      VALUE "LegalTrademarks", "OpenFOAM is Copyright (C) 2011-12 OpenFOAM Foundation.\0"
+      VALUE "FileVersion", "2.1.1.0\0"
+      VALUE "ProductVersion", "2.1.1.0\0"
+      VALUE "FileDescription", "tmpintname - Built for blueCFD, by blueCAPE.\0"
+      VALUE "LegalCopyright", "OpenFOAM is Copyright (C) 2011-13 OpenFOAM Foundation.\0"
+      VALUE "LegalTrademarks", "OpenFOAM is Copyright (C) 2011-13 OpenFOAM Foundation.\0"
       VALUE "ProductName", "OpenFOAM (unofficial build)\0"
       VALUE "InternalName", "tmpintname\0"
       VALUE "OriginalFilename", "tmporigname\0"
