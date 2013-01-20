@@ -112,6 +112,10 @@ then
 
   buildDoxyDoc prefs-mingw-w64.sh
 
+  #buildIt prefs-mingw-w32.sh WM_COMPILE_OPTION=Debug
+  #buildIt prefs-mingw-w32.sh WM_PRECISION_OPTION=SP WM_COMPILE_OPTION=Debug
+  #buildIt prefs-mingw-w64.sh WM_COMPILE_OPTION=Debug
+
   # buildIt prefs-i586-mingw32msvc.sh
   # buildIt prefs-i586-mingw32msvc.sh WM_PRECISION_OPTION=SP
   # buildIt prefs-amd64-mingw32msvc.sh
