@@ -1,2 +1,2 @@
 cDBUG       = 
-cOPT        = -O2 -DNDEBUG
+cOPT        = -O3 -DNDEBUG -Wl,--strip-all
