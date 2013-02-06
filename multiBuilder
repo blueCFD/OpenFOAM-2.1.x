@@ -110,6 +110,10 @@ then
   buildIt prefs-mingw-w32.sh WM_PRECISION_OPTION=SP
   buildIt prefs-mingw-w64.sh
 
+  #buildIt prefs-mingw-w32.sh WM_COMPILE_OPTION=Debug
+  #buildIt prefs-mingw-w32.sh WM_PRECISION_OPTION=SP WM_COMPILE_OPTION=Debug
+  #buildIt prefs-mingw-w64.sh WM_COMPILE_OPTION=Debug
+
   buildDoxyDoc prefs-mingw-w64.sh
 
   #buildIt prefs-mingw-w32.sh WM_COMPILE_OPTION=Debug
