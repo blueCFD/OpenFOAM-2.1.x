@@ -15,6 +15,9 @@ wmakeCheckPwd "$WM_PROJECT_DIR/applications" || {
     exit 1
 }
 
+#disable multi-core building for the applications folder
+onWin && unset WM_NCOMPPROCS
+
 set -x
 
 wmake all utilities
