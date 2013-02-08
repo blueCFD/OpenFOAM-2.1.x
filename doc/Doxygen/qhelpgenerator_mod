@@ -52,14 +52,18 @@ find . -name "*.html" | while read file; do
     sed -i -e 's_href="\.\./\.\./\.\./_href="_' $file
 done
 
-#copy the source code files
+#copy the source code files, with HTML headers and footers
 find ../../../src ../../../applications -name "*.[CH]" | \
 grep -v "lnInclude" | \
 while read file; do
   partialpath=${file##../../../}
   relpath=${partialpath%/*}
   mkdir -p "$relpath"
-  cp "$file" "$partialpath"
+
+  echo "<html><head></head><body><pre>" > "$partialpath"
+  cat "$file" >> "$partialpath"
+  echo "</pre></body></html>" >> "$partialpath"
+  
 done
 
 #embed the source code files
