@@ -30,6 +30,9 @@ rem    Windows Command Line.
 rem 
 rem ------------------------------------------------------------------------------
 
+rem Isolate blueCFD from other applications
+set PATH=%WINDIR%;%WINDIR%\SYSTEM32
+
 %~d0
 cd "%~dp0.."
 call :SETHOME "%CD%"
