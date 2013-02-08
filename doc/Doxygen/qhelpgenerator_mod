@@ -35,8 +35,30 @@ filelist="`find css -mindepth 1` `find . -maxdepth 1 -name "*.png"`"
 
 cd html
 
+#embed all css files and images
 for file in $filelist; do
   sed -i -e 's=\(<file>index.html</file>\)=\1\n      <file>'$file'</file>=' index.qhp
 done
 
+#remove the relative patchs for the source code
+find . -name "*.html" | while read file; do
+    sed -e -i 's_href="../../../_href="_' $file
+done
+
+#copy the source code files
+find ../../../src ../../../applications -name "*.[CH]" | grep -v "lnInclude" | \
+while read file; do
+  partialpath=${file##../../../}
+  relpath=${partialpath%/*}
+  mkdir -p "$relpath"
+  cp "$file" "$partialpath"
+done
+
+#embed the source code files
+find src applications | \
+while read file; do
+  sed -i -e 's=\(<file>index.html</file>\)=\1\n      <file>'$file'</file>=' index.qhp
+done
+
+#run the real qhelpgenerator
 qhelpgenerator $@
