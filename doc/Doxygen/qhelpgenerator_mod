@@ -74,4 +74,5 @@ echo "Merge middle into parts"
 cat index.qhp.part1 index.qhp.middle index.qhp.part2 > index.qhp
 
 #run the real qhelpgenerator
+echo "Run the real qhelpgenerator..."
 qhelpgenerator $@
