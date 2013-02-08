@@ -42,7 +42,8 @@ done
 
 #remove the relative patchs for the source code
 find . -name "*.html" | while read file; do
-    sed -e -i 's_href="../../../_href="_' $file
+    echo "Changing paths in $file"
+    sed -i -e 's_href="\.\./\.\./\.\./_href="_' $file
 done
 
 #copy the source code files
