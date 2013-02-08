@@ -140,7 +140,7 @@ set MPI_BUFFER_SIZE=20000000
 
 set ParaView_MAJOR=3.12
 set ParaView_MINOR=0
-set ParaView_VERSION=%ParaView_MAJOR%%ParaView_MINOR%
+set ParaView_VERSION=%ParaView_MAJOR%.%ParaView_MINOR%
 
 set ParaView_INST_DIR=%WM_THIRD_PARTY_DIR%\paraview-%ParaView_VERSION%
 set ParaView_DIR=%WM_THIRD_PARTY_DIR%\platforms\%WM_ARCH%%WM_COMPILER%\paraview-%ParaView_VERSION%
