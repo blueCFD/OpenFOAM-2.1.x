@@ -76,6 +76,7 @@ functions
         functionObjectLibs ("libsampling.so");
         outputControl   outputTime;
         surfaceFormat   raw;
+        interpolationScheme isThisNeeded;
         fields
         (
             p
