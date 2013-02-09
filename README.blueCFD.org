@@ -2,16 +2,16 @@
 #
 #+TITLE:             blueCFD README for version 2.1-2
 #+AUTHOR:                      blueCAPE Lda
-#+DATE:                       1st July 2012
+#+DATE:                     9th February 2013
 #+LINK:             http://www.bluecape.com.pt/blueCFD
 #+OPTIONS: author:nil ^:{}
-# Copyright (c) 2012 blueCAPE Lda.
+# Copyright (c) 2013 blueCAPE Lda.
 
 * About blueCFD
   
 
 * Copyright
-  blueCFD is a service package provided by blueCAPE Lda, of a high quality
+  blueCFD® is a service package provided by blueCAPE Lda, of a high quality
   cross-compiled build version of OpenFOAM® for up-to-date Windows XP, Vista
   and Seven, both 32 and 64bit, with some additional tweaks, executables and 
   scripts, in order to maintain usability under a Windows environment.
@@ -38,10 +38,10 @@
     + [[http://code.google.com/p/bluecfd-singlecore/source/list?repo=openfoam21x&name=symscape_2.1.x_v1]]
 
 * Disclaimer
-  blueCAPE Lda is responsible for blueCFD and this version of cross-compiled
-  OpenFOAM®. blueCAPE Lda is in no way associated with SGI Corp, nor holds
+  blueCAPE Lda is responsible for blueCFD® and this version of cross-compiled
+  OpenFOAM®. blueCAPE Lda is in no way associated with OpenCFD (ESI Group), nor holds
   any copyrights over OpenFOAM®. This offering is not approved or endorsed
-  by SGI Corp, the producer of the OpenFOAM software and owner of the OPENFOAM®
+  by OpenCFD (ESI Group), the producer of the OpenFOAM software and owner of the OPENFOAM®
   and OpenCFD® trade marks.
 
 * Download and installation instructions
